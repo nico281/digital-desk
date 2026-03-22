@@ -1,0 +1,30 @@
+---
+# Ruby LSP configuration
+# Disable some features that may be causing issues
+
+# Disable Rails features temporarily to isolate the issue
+enabledFeatures:
+  diagnostics: true
+  formatting: false
+  codeActions: true
+  hover: true
+  completion: true
+  semanticHighlighting: true
+  codeLens: true
+  documentHighlights: true
+  documentLink: true
+  foldingRanges: true
+  selectionRanges: true
+  documentSymbols: true
+  workspaceSymbols: true
+  inlayHints: false
+
+# Exclude problematic directories
+excludedPatterns:
+  - "db/schema.rb"
+  - "vendor/**/*"
+  - "node_modules/**/*"
+
+# Try without loading Rails environment
+# experimentalFeatures:
+#   rails: false
