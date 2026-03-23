@@ -20,13 +20,12 @@
     <meta name="view-transition" content="same-origin" />
   </head>
 
-  <body class="bg-gray-50 text-gray-900 antialiased min-h-screen flex flex-col">
+  <body class="bg-gray-50 text-gray-900 antialiased h-screen flex flex-col overflow-hidden">
     <%= render "components/navbar" %>
 
-    <main class="flex-grow">
+    <main class="flex-grow overflow-y-auto" style="view-transition-name: main-content;">
       <%= yield %>
+      <%= render "components/footer" %>
     </main>
-
-    <%= render "components/footer" %>
   </body>
 </html>

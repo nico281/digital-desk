@@ -1,0 +1,12 @@
+<% content_for :title, "Nuevo servicio" %>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <h1 class="page-header-title">Nuevo servicio</h1>
+    <p class="page-header-subtitle">Configurá un servicio para que los clientes puedan reservar</p>
+  </div>
+</div>
+
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <%= render "form", service: @service %>
+</div>

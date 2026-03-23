@@ -1,0 +1,61 @@
+<% content_for :title, "Mis servicios" %>
+
+<div class="page-header">
+  <div class="page-header-content flex items-center justify-between">
+    <div>
+      <h1 class="page-header-title">Mis servicios</h1>
+      <p class="page-header-subtitle">Gestioná los servicios que ofrecés</p>
+    </div>
+    <%= link_to new_pro_service_path, class: "btn-primary bg-white text-gray-900 hover:bg-gray-100", data: { turbo_action: "advance" } do %>
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+      </svg>
+      Nuevo servicio
+    <% end %>
+  </div>
+</div>
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <% if @services.any? %>
+    <div class="space-y-4">
+      <% @services.each do |service| %>
+        <div class="card p-6 flex items-center justify-between">
+          <div class="flex-1">
+            <div class="flex items-center gap-3">
+              <h3 class="font-semibold text-gray-900"><%= service.title %></h3>
+              <% if service.category %>
+                <span class="badge badge-gray"><%= service.category.name %></span>
+              <% end %>
+            </div>
+            <p class="text-sm text-gray-500 mt-1"><%= truncate(service.description, length: 120) %></p>
+            <div class="flex items-center gap-4 mt-2 text-sm text-gray-400">
+              <span><%= number_to_currency(service.price, unit: "$", precision: 0) %></span>
+              <span><%= service.duration_minutes %> min</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 ml-4">
+            <%= link_to edit_pro_service_path(service), class: "btn-secondary text-sm py-2 px-3", data: { turbo_action: "advance" } do %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+              </svg>
+            <% end %>
+            <%= button_to pro_service_path(service), method: :delete, class: "btn-secondary text-sm py-2 px-3 text-red-600 hover:text-red-700 hover:border-red-200", data: { turbo_confirm: "¿Eliminar este servicio?" } do %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <%= render "components/empty_state",
+        title: "Sin servicios",
+        message: "Creá tu primer servicio para que los clientes puedan reservar",
+        icon: "clipboard" %>
+    <div class="text-center mt-4">
+      <%= link_to "Crear servicio", new_pro_service_path, class: "btn-primary", data: { turbo_action: "advance" } %>
+    </div>
+  <% end %>
+</div>

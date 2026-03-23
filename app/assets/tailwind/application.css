@@ -1,9 +1,15 @@
 @import "tailwindcss";
 
 /* View Transitions */
-::view-transition-old(root),
-::view-transition-new(root) {
+::view-transition-old(main-content),
+::view-transition-new(main-content) {
   animation-duration: 0.3s;
+}
+
+/* Keep navbar stable during transitions */
+::view-transition-old(navbar),
+::view-transition-new(navbar) {
+  animation: none;
 }
 
 @layer components {
