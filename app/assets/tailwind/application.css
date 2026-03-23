@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
-/* Theme Utility Classes */
+/* View Transitions */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.3s;
+}
+
 @layer components {
   /* Page Headers */
   .page-header {
