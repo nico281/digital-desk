@@ -9,6 +9,6 @@ class CreateAvailabilitySchedules < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :availability_schedules, [:professional_id, :day_of_week]
+    add_index :availability_schedules, [ :professional_id, :day_of_week ]
   end
 end

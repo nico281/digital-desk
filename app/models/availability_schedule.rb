@@ -12,6 +12,6 @@ class AvailabilitySchedule < ApplicationRecord
 
   def end_time_after_start_time
     return if start_time.nil? || end_time.nil?
-    errors.add(:end_time, 'must be after start time') if end_time <= start_time
+    errors.add(:end_time, "must be after start time") if end_time <= start_time
   end
 end

@@ -1,0 +1,32 @@
+<% content_for :title, "Categorías" %>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <h1 class="page-header-title">Explora por categoría</h1>
+    <p class="page-header-subtitle">Encontrá exactamente lo que necesitás</p>
+  </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @categories.each do |category| %>
+      <%= link_to category_path(category), class: "group card card-hoverable p-6", data: { turbo_action: "advance" } do %>
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-600">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg text-gray-900 group-hover:text-gray-700 transition-colors">
+              <%= category.name %>
+            </h3>
+            <p class="text-sm text-gray-500">
+              <%= category.children.count %> subcategorías
+            </p>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

@@ -11,7 +11,7 @@ class CreateAvailabilityBlocks < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :availability_blocks, [:professional_id, :date, :start_time], unique: true
+    add_index :availability_blocks, [ :professional_id, :date, :start_time ], unique: true
     add_index :availability_blocks, :status
   end
 end

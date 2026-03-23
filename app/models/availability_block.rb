@@ -12,15 +12,15 @@ class AvailabilityBlock < ApplicationRecord
 
   scope :available, -> { where(status: :available) }
   scope :for_date, ->(date) { where(date:) }
-  scope :upcoming, -> { where('date >= ?', Date.today) }
+  scope :upcoming, -> { where("date >= ?", Date.today) }
 
   def available?
-    status == 'available'
+    status == "available"
   end
 
   def book!(booking)
     with_lock do
-      raise 'Block already booked' if booked?
+      raise "Block already booked" if booked?
       update!(status: :booked, booking:)
     end
   end
@@ -29,14 +29,14 @@ class AvailabilityBlock < ApplicationRecord
 
   def end_time_after_start_time
     return if start_time.nil? || end_time.nil?
-    errors.add(:end_time, 'must be after start time') if end_time <= start_time
+    errors.add(:end_time, "must be after start time") if end_time <= start_time
   end
 
   def booking_consistency
     if booked? && booking.nil?
-      errors.add(:booking, 'must be present when status is booked')
+      errors.add(:booking, "must be present when status is booked")
     elsif !booked? && booking.present?
-      errors.add(:booking, 'must be nil when status is not booked')
+      errors.add(:booking, "must be nil when status is not booked")
     end
   end
 end

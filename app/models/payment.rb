@@ -10,7 +10,7 @@ class Payment < ApplicationRecord
   scope :pending, -> { where(status: :pending) }
 
   def approved?
-    status == 'approved'
+    status == "approved"
   end
 
   def refund!

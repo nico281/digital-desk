@@ -1,6 +1,6 @@
 class Review < ApplicationRecord
   belongs_to :booking
-  belongs_to :client, class_name: 'User'
+  belongs_to :client, class_name: "User"
   belongs_to :professional
 
   validates :rating, presence: true, inclusion: { in: 1..5 }
@@ -17,12 +17,12 @@ class Review < ApplicationRecord
 
   def booking_completed
     return unless booking
-    errors.add(:booking, 'must be completed to review') unless booking.completed?
+    errors.add(:booking, "must be completed to review") unless booking.completed?
   end
 
   def client_is_booking_client
     return unless booking && client
-    errors.add(:client, 'must be the booking client') unless booking.client_id == client.id
+    errors.add(:client, "must be the booking client") unless booking.client_id == client.id
   end
 
   def update_professional_rating

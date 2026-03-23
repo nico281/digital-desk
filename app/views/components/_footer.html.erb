@@ -1,0 +1,39 @@
+<footer class="bg-gray-900 text-gray-400 mt-auto">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <!-- Brand -->
+      <div class="col-span-1 md:col-span-2">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+            <span class="text-gray-900 font-bold text-sm">D</span>
+          </div>
+          <span class="font-semibold text-xl text-white">D-Desk</span>
+        </div>
+        <p class="text-sm max-w-md">
+          Conecta con profesionales de confianza. Reserva sesiones 1 a 1 por videollamada en minutos.
+        </p>
+      </div>
+
+      <!-- Links -->
+      <div>
+        <h4 class="text-white font-semibold mb-4">Plataforma</h4>
+        <ul class="space-y-2 text-sm">
+          <li><%= link_to "Buscar profesionales", search_path, class: "hover:text-white transition-colors", data: { turbo_action: "advance" } %></li>
+          <li><%= link_to "Categorías", categories_path, class: "hover:text-white transition-colors", data: { turbo_action: "advance" } %></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-white font-semibold mb-4">Profesionales</h4>
+        <ul class="space-y-2 text-sm">
+          <li><%= link_to "Ser profesional", pro_setup_path, class: "hover:text-white transition-colors", data: { turbo_action: "advance" } %></li>
+          <li><a href="#" class="hover:text-white transition-colors">Cómo funciona</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-8 pt-8 border-t border-gray-800 text-sm text-center">
+      <p>&copy; <%= Time.current.year %> D-Desk. Hecho con Rails 8.</p>
+    </div>
+  </div>
+</footer>

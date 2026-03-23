@@ -1,0 +1,120 @@
+<% content_for :title, "Reserva ##{@booking.id}" %>
+
+<div class="bg-violet-600 border-b border-violet-700">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex items-center gap-2 text-violet-200 text-sm mb-2">
+      <%= link_to "Inicio", root_path, class: "hover:text-white", data: { turbo_action: "advance" } %>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+      <%= link_to "Mi Panel", dashboard_path, class: "hover:text-white", data: { turbo_action: "advance" } %>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+      <span class="text-white">Reserva #<%= @booking.id %></span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-white">Detalles de la reserva</h1>
+  </div>
+</div>
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+    <!-- Status Banner -->
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between
+      <%= case @booking.status
+          when 'confirmed' then 'bg-green-50'
+          when 'pending' then 'bg-yellow-50'
+          when 'completed' then 'bg-blue-50'
+          else 'bg-gray-50'
+          end %>">
+      <div class="flex items-center gap-3">
+        <div class="w-3 h-3 rounded-full
+          <%= case @booking.status
+              when 'confirmed' then 'bg-green-500'
+              when 'pending' then 'bg-yellow-500'
+              when 'completed' then 'bg-blue-500'
+              else 'bg-gray-400'
+              end %>"></div>
+        <span class="font-semibold
+          <%= case @booking.status
+              when 'confirmed' then 'text-green-700'
+              when 'pending' then 'text-yellow-700'
+              when 'completed' then 'text-blue-700'
+              else 'text-gray-700'
+              end %>">
+          <%= @booking.status.capitalize %>
+        </span>
+      </div>
+
+      <% if @booking.pending? && @booking.client == current_user %>
+        <%= button_to confirm_booking_path(@booking), method: :post,
+            class: "px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-500 transition-colors",
+            data: { turbo_confirm: "¿Confirmar esta reserva?" } do %>
+          Confirmar reserva
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Booking Details -->
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Service Info -->
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-2">Servicio</h3>
+          <p class="text-lg font-semibold text-gray-900"><%= @booking.service.title %></p>
+          <p class="text-gray-600 mt-1"><%= @booking.service.description %></p>
+          <p class="text-gray-500 text-sm mt-2">
+            Duración: <%= @booking.service.duration_minutes %> minutos
+          </p>
+        </div>
+
+        <!-- Professional Info -->
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-2">Profesional</h3>
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-white font-semibold">
+              <%= @booking.professional.user.name.first.upcase %>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-900"><%= @booking.professional.user.name %></p>
+              <p class="text-sm text-gray-500"><%= @booking.professional.headline %></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Date & Time -->
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-2">Fecha y hora</h3>
+          <p class="text-lg font-semibold text-gray-900">
+            <%= @booking.availability_block.date&.strftime("%A, %d de %B de %Y") %>
+          </p>
+          <p class="text-gray-600">
+            <%= @booking.availability_block.start_time&.strftime("%H:%M") %> - <%= @booking.availability_block.end_time&.strftime("%H:%M") %>
+          </p>
+        </div>
+
+        <!-- Price -->
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-2">Total</h3>
+          <p class="text-2xl font-bold text-gray-900">
+            <%= number_to_currency(@booking.service.price, unit: "$", precision: 0) %>
+          </p>
+          <p class="text-sm text-gray-500">Pagado al confirmar</p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="mt-8 pt-6 border-t border-gray-100 flex flex-wrap gap-3">
+        <% if @booking.pending? %>
+          <%= button_to cancel_booking_path(@booking), method: :post,
+              class: "px-4 py-2 border border-red-200 text-red-700 text-sm font-medium rounded-lg hover:bg-red-50 transition-colors",
+              data: { turbo_confirm: "¿Estás seguro de cancelar esta reserva?" } do %>
+            Cancelar reserva
+          <% end %>
+        <% end %>
+
+        <%= link_to "Volver al panel", dashboard_path, class: "px-4 py-2 text-gray-700 text-sm font-medium hover:text-gray-900", data: { turbo_action: "advance" } %>
+      </div>
+    </div>
+  </div>
+</div>

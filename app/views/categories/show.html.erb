@@ -1,0 +1,67 @@
+<% content_for :title, @category.name %>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <div class="flex items-center gap-2 text-gray-400 text-sm mb-2">
+      <%= link_to "Inicio", root_path, class: "hover:text-white", data: { turbo_action: "advance" } %>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+      <%= link_to "Categorías", categories_path, class: "hover:text-white", data: { turbo_action: "advance" } %>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+      <span class="text-white"><%= @category.name %></span>
+    </div>
+    <h1 class="page-header-title"><%= @category.name %></h1>
+  </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex flex-col lg:flex-row gap-8">
+    <!-- Sidebar: Subcategories -->
+    <% if @subcategories.any? %>
+      <aside class="lg:w-64 flex-shrink-0">
+        <div class="card p-5 sticky top-24">
+          <h2 class="font-semibold text-gray-900 mb-4">Subcategorías</h2>
+          <div class="space-y-1">
+            <%= link_to "Todas", category_path(@category),
+                class: "block px-3 py-2 rounded-lg text-sm #{params[:subcategory_id].blank? ? "bg-gray-100 text-gray-900 font-medium" : "text-gray-600 hover:bg-gray-50"}",
+                data: { turbo_action: "advance" } %>
+
+            <% @subcategories.each do |sub| %>
+              <%= link_to sub.name, category_path(@category, subcategory_id: sub.id),
+                  class: "block px-3 py-2 rounded-lg text-sm #{params[:subcategory_id] == sub.id.to_s ? "bg-gray-100 text-gray-900 font-medium" : "text-gray-600 hover:bg-gray-50"}",
+                  data: { turbo_action: "advance" } %>
+            <% end %>
+          </div>
+        </div>
+      </aside>
+    <% end %>
+
+    <!-- Results -->
+    <div class="flex-1">
+      <div class="flex items-center justify-between mb-6">
+        <p class="text-gray-500"><%= @professionals.count %> profesionales</p>
+      </div>
+
+      <% if @professionals.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <% @professionals.each do |professional| %>
+            <%= render "components/professional_card", professional: %>
+          <% end %>
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-10 flex justify-center">
+          <%= paginate @professionals, window: 2, outer_window: 1 %>
+        </div>
+      <% else %>
+        <%= render "components/empty_state",
+            title: "No hay profesionales en esta categoría",
+            message: "Sé el primero en ofrecer servicios en #{@category.name.downcase}",
+            icon: "search" %>
+      <% end %>
+    </div>
+  </div>
+</div>

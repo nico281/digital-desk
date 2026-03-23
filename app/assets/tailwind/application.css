@@ -1,1 +1,85 @@
 @import "tailwindcss";
+
+/* Theme Utility Classes */
+@layer components {
+  /* Page Headers */
+  .page-header {
+    @apply bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-b border-white/10;
+  }
+
+  .page-header-content {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+  }
+
+  .page-header-title {
+    @apply text-2xl sm:text-3xl font-bold text-white;
+  }
+
+  .page-header-subtitle {
+    @apply text-gray-400 mt-1;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium transition-all;
+  }
+
+  .btn-primary {
+    @apply bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-gray-700 border border-gray-200 hover:bg-gray-50;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-white rounded-2xl border border-gray-200;
+  }
+
+  .card-hoverable {
+    @apply hover:shadow-lg hover:border-gray-300 transition-all duration-300;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+
+  .badge-gray {
+    @apply bg-gray-100 text-gray-700;
+  }
+
+  .badge-green {
+    @apply bg-green-100 text-green-700;
+  }
+
+  .badge-yellow {
+    @apply bg-yellow-100 text-yellow-700;
+  }
+
+  .badge-blue {
+    @apply bg-blue-100 text-blue-700;
+  }
+
+  /* Avatars */
+  .avatar {
+    @apply rounded-xl flex items-center justify-center text-white font-semibold;
+  }
+
+  .avatar-primary {
+    @apply bg-gradient-to-br from-gray-700 to-gray-900;
+  }
+
+  .avatar-sm {
+    @apply w-10 h-10 text-sm;
+  }
+
+  .avatar-md {
+    @apply w-12 h-12 text-base;
+  }
+
+  .avatar-lg {
+    @apply w-16 h-16 text-xl;
+  }
+}

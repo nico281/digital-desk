@@ -1,6 +1,6 @@
 class Category < ApplicationRecord
-  has_many :children, class_name: 'Category', foreign_key: :parent_id
-  belongs_to :parent, class_name: 'Category', optional: true
+  has_many :children, class_name: "Category", foreign_key: :parent_id
+  belongs_to :parent, class_name: "Category", optional: true
 
   has_many :professional_categories, dependent: :destroy
   has_many :professionals, through: :professional_categories
@@ -16,7 +16,7 @@ class Category < ApplicationRecord
 
   def ancestors
     return [] if parent.nil?
-    [parent] + parent.ancestors
+    [ parent ] + parent.ancestors
   end
 
   def to_param

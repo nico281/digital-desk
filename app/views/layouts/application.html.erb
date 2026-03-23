@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html class="scroll-smooth">
   <head>
-    <title><%= content_for(:title) || "Digital Desk" %></title>
+    <title><%= content_for(:title) || "D-Desk" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -9,22 +9,21 @@
     <%= csp_meta_tag %>
 
     <%= yield :head %>
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="bg-gray-50 text-gray-900 antialiased min-h-screen flex flex-col">
+    <%= render "components/navbar" %>
+
+    <main class="flex-grow">
       <%= yield %>
     </main>
+
+    <%= render "components/footer" %>
   </body>
 </html>
