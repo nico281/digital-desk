@@ -26,7 +26,12 @@
       <div>
         <h4 class="text-white font-semibold mb-4">Profesionales</h4>
         <ul class="space-y-2 text-sm">
-          <li><%= link_to "Ser profesional", pro_setup_path, class: "hover:text-white transition-colors", data: { turbo_action: "advance" } %></li>
+          <li><%= link_to pro_setup_path, class: "inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 rounded-lg text-white hover:bg-white/20 transition-colors", data: { turbo_action: "advance" } do %>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            Ser profesional
+          <% end %></li>
           <li><a href="#" class="hover:text-white transition-colors">Cómo funciona</a></li>
         </ul>
       </div>
