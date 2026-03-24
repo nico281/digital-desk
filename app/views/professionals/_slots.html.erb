@@ -1,0 +1,81 @@
+<turbo-frame id="slots_<%= service.id %>">
+  <div class="mt-4 p-4 bg-white rounded-xl border border-gray-200" data-controller="slot-picker">
+    <div class="flex items-center justify-between mb-4">
+      <h4 class="font-semibold text-gray-900">Elegí un horario</h4>
+      <button type="button" data-action="slot-picker#close" class="text-gray-400 hover:text-gray-600">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Navegación de fecha -->
+    <div class="flex items-center gap-2 mb-4">
+      <% prev_date = date - 1.day %>
+      <% next_date = date + 1.day %>
+
+      <% if prev_date >= Date.today %>
+        <%= link_to slots_professional_path(professional, service_id: service.id, date: prev_date),
+            data: { turbo_frame: "slots_#{service.id}" },
+            class: "p-2 rounded-lg hover:bg-gray-100 text-gray-500" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        <% end %>
+      <% else %>
+        <div class="p-2 text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></div>
+      <% end %>
+
+      <div class="flex-1 text-center">
+        <span class="font-medium text-gray-900"><%= I18n.l(date, format: :long) %></span>
+      </div>
+
+      <% if next_date <= Date.today + 30.days %>
+        <%= link_to slots_professional_path(professional, service_id: service.id, date: next_date),
+            data: { turbo_frame: "slots_#{service.id}" },
+            class: "p-2 rounded-lg hover:bg-gray-100 text-gray-500" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        <% end %>
+      <% else %>
+        <div class="p-2 text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>
+      <% end %>
+    </div>
+
+    <!-- Grid de bloques -->
+    <% if blocks.any? %>
+      <div class="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-4">
+        <% blocks.each do |block| %>
+          <button type="button"
+            class="px-3 py-2 text-sm font-medium rounded-lg border border-gray-200 hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-colors text-gray-700"
+            data-action="slot-picker#select"
+            data-slot-picker-block-id-param="<%= block.id %>"
+            data-slot-picker-label-param="<%= block.start_time.strftime('%H:%M') %> — <%= block.end_time.strftime('%H:%M') %>">
+            <%= block.start_time.strftime("%H:%M") %>
+          </button>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-sm text-gray-500 text-center py-4">No hay horarios disponibles para este día.</p>
+    <% end %>
+
+    <!-- Form de reserva (oculto hasta seleccionar bloque) -->
+    <div data-slot-picker-target="form" class="hidden">
+      <%= form_with url: bookings_path, method: :post, class: "border-t border-gray-100 pt-4 mt-2", data: { turbo_frame: "_top" } do |f| %>
+        <input type="hidden" name="booking[professional_id]" value="<%= professional.id %>">
+        <input type="hidden" name="booking[service_id]" value="<%= service.id %>">
+        <input type="hidden" name="booking[availability_block_id]" value="" data-slot-picker-target="blockIdInput">
+
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Horario seleccionado:</p>
+            <p class="font-semibold text-gray-900" data-slot-picker-target="summary"></p>
+          </div>
+          <%= f.submit "Confirmar reserva",
+              class: "btn-primary text-sm py-2 px-6 cursor-pointer" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</turbo-frame>

@@ -1,25 +1,21 @@
 class ProfessionalsController < ApplicationController
-  before_action :set_professional, only: [ :show ]
-
-  def index
-    @professionals = Professional.joins(:user)
-      .includes(:categories, :services, :cancellation_policy)
-      .where(verified: true)
-      .order(rating_avg: :desc)
-      .page(params[:page])
-      .per(12)
-
-    @categories = Category.where(parent_id: nil)
-  end
-
   def show
+    @professional = Professional.find(params[:id])
     @services = @professional.services.active
     @reviews = @professional.reviews.order(created_at: :desc).limit(5)
   end
 
-  private
-
-  def set_professional
+  def slots
     @professional = Professional.find(params[:id])
+    @service = @professional.services.find(params[:service_id])
+    @date = params[:date].present? ? Date.parse(params[:date]) : Date.tomorrow
+    @date = [ @date, Date.today ].max
+
+    @blocks = @professional.availability_blocks
+      .available
+      .for_date(@date)
+      .order(:start_time)
+
+    render layout: false
   end
 end

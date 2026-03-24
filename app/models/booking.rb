@@ -6,6 +6,7 @@ class Booking < ApplicationRecord
   belongs_to :service
   belongs_to :availability_block
   belongs_to :payment, optional: true
+  has_one :review
 
   validates :client, presence: true
   validates :professional, presence: true
@@ -27,7 +28,10 @@ class Booking < ApplicationRecord
   end
 
   def cancel!
-    update!(status: :cancelled)
+    transaction do
+      update!(status: :cancelled)
+      availability_block.release!
+    end
   end
 
   def start_time

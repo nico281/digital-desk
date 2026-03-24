@@ -47,7 +47,7 @@ if User.count == 0
       categories: [ matematica, fisica ],
       services: [
         { title: "Clase de Matemática - Nivel Secundario", price: 15000, duration: 60, category: matematica },
-        { title: "Preparación Examen de Ingreso", price: 20000, duration: 90, category: matematica },
+        { title: "Preparación Examen de Ingreso", price: 20000, duration: 60, category: matematica },
         { title: "Clase de Física", price: 15000, duration: 60, category: fisica }
       ],
       rating: 4.8,
@@ -63,7 +63,7 @@ if User.count == 0
       services: [
         { title: "Mentoría de Programación - 1 hora", price: 18000, duration: 60, category: prog_cat },
         { title: "Code Review de tu Proyecto", price: 25000, duration: 60, category: desarrollo_web },
-        { title: "Clase de Ruby on Rails", price: 20000, duration: 90, category: desarrollo_web }
+        { title: "Clase de Ruby on Rails", price: 20000, duration: 60, category: desarrollo_web }
       ],
       rating: 4.9,
       rating_count: 38
@@ -121,7 +121,7 @@ if User.count == 0
       categories: [ desarrollo_web, prog_cat ],
       services: [
         { title: "Mentoría Técnica - Rails", price: 25000, duration: 60, category: desarrollo_web },
-        { title: "Code Review y Arquitectura", price: 30000, duration: 90, category: desarrollo_web },
+        { title: "Code Review y Arquitectura", price: 30000, duration: 60, category: desarrollo_web },
         { title: "Pair Programming Session", price: 20000, duration: 60, category: prog_cat }
       ],
       rating: 5.0,
@@ -151,7 +151,7 @@ if User.count == 0
       categories: [ quimica, matematica ],
       services: [
         { title: "Clase de Química Orgánica", price: 18000, duration: 60, category: quimica },
-        { title: "Asesoría de Tesis", price: 25000, duration: 90, category: quimica },
+        { title: "Asesoría de Tesis", price: 25000, duration: 60, category: quimica },
         { title: "Clase de Química General", price: 15000, duration: 60, category: quimica }
       ],
       rating: 4.6,
@@ -165,7 +165,7 @@ if User.count == 0
       email: prof_data[:email],
       password: prof_data[:password],
       name: prof_data[:name],
-      role: :client
+      role: :professional
     )
 
     # Crear profesional
@@ -203,9 +203,38 @@ if User.count == 0
       late_cancel_refund_percent: 0
     )
 
-    puts "✓ Creado: #{prof_data[:name]}"
+    # Crear horarios de disponibilidad (lunes a viernes, 9-12 y 14-18)
+    (1..5).each do |day|
+      AvailabilitySchedule.create!(professional: professional, day_of_week: day, start_time: "09:00", end_time: "12:00")
+      AvailabilitySchedule.create!(professional: professional, day_of_week: day, start_time: "14:00", end_time: "18:00")
+    end
+
+    # Generar bloques materializados (4 semanas)
+    professional.generate_blocks!
+
+    puts "✓ Creado: #{prof_data[:name]} (#{professional.availability_blocks.count} bloques)"
   end
+
+  # Crear usuarios cliente de prueba
+  puts "\nCreando clientes de prueba..."
+
+  client1 = User.create!(
+    email: "cliente@example.com",
+    password: "password123",
+    name: "Juan Pérez",
+    role: :client
+  )
+  puts "✓ Cliente: #{client1.name} (#{client1.email})"
+
+  client2 = User.create!(
+    email: "cliente2@example.com",
+    password: "password123",
+    name: "Sofía Ruiz",
+    role: :client
+  )
+  puts "✓ Cliente: #{client2.name} (#{client2.email})"
 
   puts "\nTotal profesionales: #{Professional.count}"
   puts "Total servicios: #{Service.count}"
+  puts "Total clientes: #{User.client.count}"
 end

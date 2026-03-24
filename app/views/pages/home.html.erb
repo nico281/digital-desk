@@ -25,7 +25,7 @@
 
       <!-- Search Box -->
       <div class="bg-white/10 backdrop-blur-md rounded-2xl p-2 mb-6">
-        <%= form_tag search_path, method: :get, class: "flex flex-col sm:flex-row gap-2", data: { turbo_action: "advance", controller: "search-box" } do %>
+        <%= form_with url: search_path, method: :get, class: "flex flex-col sm:flex-row gap-2", data: { turbo_action: "advance", controller: "search-box" } do %>
           <div class="flex-1 relative">
             <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -83,7 +83,7 @@
         <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Explora por categoría</h2>
         <p class="text-gray-500 mt-2">Encontrá exactamente lo que necesitás</p>
       </div>
-      <%= link_to categories_path, class: "text-gray-700 font-medium hover:text-gray-900 flex items-center gap-1 group", data: { turbo_action: "advance" } do %>
+      <%= link_to search_path, class: "text-gray-700 font-medium hover:text-gray-900 flex items-center gap-1 group", data: { turbo_action: "advance" } do %>
         Ver todas
         <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -120,7 +120,7 @@
     </div>
 
     <div class="mt-12 text-center">
-      <%= link_to professionals_path, class: "inline-flex items-center gap-2 px-8 py-4 bg-gray-900 text-white font-medium rounded-xl hover:bg-gray-800 transition-all hover:shadow-lg", data: { turbo_action: "advance" } do %>
+      <%= link_to search_path, class: "inline-flex items-center gap-2 px-8 py-4 bg-gray-900 text-white font-medium rounded-xl hover:bg-gray-800 transition-all hover:shadow-lg", data: { turbo_action: "advance" } do %>
         Ver todos los profesionales
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -188,7 +188,7 @@
     </p>
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
       <%= link_to "Comenzar ahora", new_user_registration_path, class: "px-8 py-4 bg-white text-gray-900 font-semibold rounded-xl hover:bg-gray-100 transition-all hover:shadow-lg", data: { turbo_action: "advance" } %>
-      <%= link_to professionals_path, class: "px-8 py-4 bg-white/10 text-white font-semibold rounded-xl hover:bg-white/20 transition-all border border-white/10", data: { turbo_action: "advance" } do %>
+      <%= link_to search_path, class: "px-8 py-4 bg-white/10 text-white font-semibold rounded-xl hover:bg-white/20 transition-all border border-white/10", data: { turbo_action: "advance" } do %>
         Explorar como cliente
       <% end %>
     </div>

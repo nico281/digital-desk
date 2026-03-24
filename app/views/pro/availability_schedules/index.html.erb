@@ -18,6 +18,37 @@
 </div>
 
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Configuración de bloques -->
+  <div class="card p-6 mb-6">
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900">Configuración de bloques</h2>
+        <p class="text-sm text-gray-500">Definí la duración de cada turno y el descanso entre turnos</p>
+      </div>
+      <% if @blocks_count > 0 %>
+        <span class="badge badge-blue"><%= @blocks_count %> bloques disponibles</span>
+      <% end %>
+    </div>
+
+    <%= form_with model: @professional, url: pro_block_settings_path, method: :patch, class: "flex flex-wrap items-end gap-4" do |f| %>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Duración del turno</label>
+        <%= f.select :block_duration_minutes,
+            [["15 minutos", 15], ["30 minutos", 30], ["45 minutos", 45], ["1 hora", 60]],
+            {},
+            class: "rounded-xl border-gray-300 focus:border-gray-500 focus:ring-gray-500" %>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Descanso entre turnos</label>
+        <%= f.select :buffer_minutes,
+            [["Sin descanso", 0], ["5 minutos", 5], ["10 minutos", 10], ["15 minutos", 15]],
+            {},
+            class: "rounded-xl border-gray-300 focus:border-gray-500 focus:ring-gray-500" %>
+      </div>
+      <%= f.submit "Guardar", class: "btn-primary cursor-pointer" %>
+    <% end %>
+  </div>
+
   <% if @schedules.any? %>
     <div class="space-y-4">
       <% (1..6).to_a.push(0).each do |day| %>

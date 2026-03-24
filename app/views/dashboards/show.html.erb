@@ -44,7 +44,7 @@
       <div class="card p-6">
         <h3 class="font-semibold text-gray-900 mb-4">Accesos rápidos</h3>
         <div class="space-y-2">
-          <%= link_to professionals_path, class: "flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-700", data: { turbo_action: "advance" } do %>
+          <%= link_to search_path, class: "flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-gray-700", data: { turbo_action: "advance" } do %>
             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
@@ -118,11 +118,11 @@
                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
                   <div class="flex items-center gap-4">
                     <div class="avatar avatar-primary avatar-md">
-                      <%= booking.client.user.name.first.upcase %>
+                      <%= booking.client.name.first.upcase %>
                     </div>
                     <div>
                       <p class="font-medium text-gray-900"><%= booking.service.title %></p>
-                      <p class="text-sm text-gray-500">de <%= booking.client.user.name %></p>
+                      <p class="text-sm text-gray-500">de <%= booking.client.name %></p>
                     </div>
                   </div>
 

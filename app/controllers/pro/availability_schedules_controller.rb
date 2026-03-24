@@ -8,6 +8,16 @@ module Pro
     def index
       @schedules = @professional.availability_schedules.ordered
       @schedules_by_day = @schedules.group_by(&:day_of_week)
+      @blocks_count = @professional.availability_blocks.available.upcoming.count
+    end
+
+    def update_settings
+      if @professional.update(block_settings_params)
+        BlockGeneratorJob.perform_later("professional", @professional.id)
+        redirect_to pro_availability_schedules_path, notice: "Configuración actualizada. Regenerando bloques..."
+      else
+        redirect_to pro_availability_schedules_path, alert: @professional.errors.full_messages.join(", ")
+      end
     end
 
     def new
@@ -47,6 +57,10 @@ module Pro
 
     def schedule_params
       params.require(:availability_schedule).permit(:day_of_week, :start_time, :end_time)
+    end
+
+    def block_settings_params
+      params.require(:professional).permit(:block_duration_minutes, :buffer_minutes)
     end
   end
 end

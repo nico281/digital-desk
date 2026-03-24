@@ -4,12 +4,26 @@ class User < ApplicationRecord
   has_many :reviews_as_client, class_name: "Review", foreign_key: :client_id, dependent: :destroy
 
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
+         :omniauthable, omniauth_providers: [ :google_oauth2 ]
 
   enum :role, client: 0, professional: 1
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
+  validates :password, presence: true, on: :create, unless: :from_omniauth?
+
+  def self.from_omniauth(auth)
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+      user.email = auth.info.email
+      user.name = auth.info.name
+      user.password = Devise.friendly_token[0, 20]
+    end
+  end
+
+  def from_omniauth?
+    provider.present?
+  end
 
   def can_provide_services?
     professional?

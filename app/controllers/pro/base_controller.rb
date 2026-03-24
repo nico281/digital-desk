@@ -1,12 +1,12 @@
 module Pro
   class BaseController < ApplicationController
     before_action :require_authentication!
-    before_action :set_professional, except: [ :setup_redirect ]
+    before_action :set_professional
 
     private
 
     def set_professional
-      @professional = current_user.professional
+      @professional = current_user&.professional
     end
 
     def require_professional!

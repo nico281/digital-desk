@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_22_035117) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_24_034102) do
   create_table "availability_blocks", force: :cascade do |t|
     t.integer "professional_id", null: false
     t.date "date", null: false
@@ -20,6 +20,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_22_035117) do
     t.integer "booking_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "availability_schedule_id"
+    t.index ["availability_schedule_id"], name: "index_availability_blocks_on_availability_schedule_id"
     t.index ["booking_id"], name: "index_availability_blocks_on_booking_id"
     t.index ["professional_id", "date", "start_time"], name: "idx_on_professional_id_date_start_time_f5ca85da9c", unique: true
     t.index ["professional_id"], name: "index_availability_blocks_on_professional_id"
@@ -107,6 +109,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_22_035117) do
     t.boolean "require_confirmation", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "block_duration_minutes", default: 60, null: false
+    t.integer "buffer_minutes", default: 0, null: false
     t.index ["user_id"], name: "index_professionals_on_user_id", unique: true
   end
 
@@ -148,10 +152,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_22_035117) do
     t.integer "role", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "provider"
+    t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "availability_blocks", "availability_schedules"
   add_foreign_key "availability_blocks", "bookings"
   add_foreign_key "availability_blocks", "professionals"
   add_foreign_key "availability_schedules", "professionals"

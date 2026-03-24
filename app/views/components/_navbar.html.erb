@@ -12,7 +12,6 @@
       <!-- Desktop Nav -->
       <div class="hidden md:flex items-center gap-6">
         <%= link_to "Buscar profesionales", search_path, class: "text-gray-600 hover:text-gray-900 font-medium transition-colors", data: { turbo_action: "advance" } %>
-        <%= link_to "Categorías", categories_path, class: "text-gray-600 hover:text-gray-900 font-medium transition-colors", data: { turbo_action: "advance" } %>
       </div>
 
       <!-- Auth / User -->
@@ -38,7 +37,6 @@
     <div class="md:hidden hidden pb-4" data-navbar-target="menu">
       <div class="flex flex-col gap-2 pt-2 border-t border-gray-100">
         <%= link_to "Buscar profesionales", search_path, class: "px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg", data: { turbo_action: "advance" } %>
-        <%= link_to "Categorías", categories_path, class: "px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg", data: { turbo_action: "advance" } %>
         <% if user_signed_in? %>
           <%= link_to "Mi Panel", dashboard_path, class: "px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg", data: { turbo_action: "advance" } %>
         <% end %>
