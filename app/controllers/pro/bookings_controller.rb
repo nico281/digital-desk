@@ -4,11 +4,16 @@ module Pro
     before_action :set_booking, only: [ :confirm, :reject ]
 
     def index
-      @bookings = @professional.bookings
-                    .includes(:client, :service, :availability_block)
-                    .order(created_at: :desc)
+      all_bookings = @professional.bookings
+      @status_counts = all_bookings.group(:status).count
+      @total_count = all_bookings.count
 
       @filter = params[:status]
+      @bookings = all_bookings
+                    .includes(:client, :service, :availability_block)
+                    .joins(:availability_block)
+                    .order("availability_blocks.date DESC, availability_blocks.start_time DESC")
+
       @bookings = @bookings.where(status: @filter) if @filter.present? && Booking.statuses.key?(@filter)
     end
 

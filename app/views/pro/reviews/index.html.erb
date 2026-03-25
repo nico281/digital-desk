@@ -1,0 +1,112 @@
+<% content_for :title, "Mis reseñas" %>
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">Mis reseñas</h1>
+    <p class="text-sm text-gray-500 mt-1">Lo que dicen tus clientes</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+    <!-- Rating overview -->
+    <div class="card p-6">
+      <div class="flex items-center gap-4">
+        <div>
+          <p class="text-4xl font-bold text-gray-900"><%= @rating_avg > 0 ? number_with_precision(@rating_avg, precision: 1) : "—" %></p>
+          <div class="flex items-center gap-0.5 mt-1">
+            <% 5.times do |i| %>
+              <svg class="w-4 h-4 <%= i < @rating_avg.round ? 'text-yellow-400' : 'text-gray-200' %>" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+            <% end %>
+          </div>
+          <p class="text-sm text-gray-400 mt-1"><%= @rating_count %> <%= @rating_count == 1 ? "reseña" : "reseñas" %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Star distribution -->
+    <div class="card p-6">
+      <div class="space-y-2">
+        <% 5.downto(1) do |star| %>
+          <% count = @star_distribution[star] || 0 %>
+          <% pct = @rating_count > 0 ? (count.to_f / @rating_count * 100).round : 0 %>
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-gray-500 w-4 text-right"><%= star %></span>
+            <svg class="w-4 h-4 text-yellow-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+            <div class="flex-1 bg-gray-100 rounded-full h-2">
+              <div class="bg-yellow-400 h-2 rounded-full transition-all" style="width: <%= pct %>%"></div>
+            </div>
+            <span class="text-xs text-gray-400 w-8"><%= count %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reviews list -->
+  <% if @reviews.any? %>
+    <div class="space-y-4">
+      <% @reviews.each do |review| %>
+        <div class="card overflow-hidden">
+          <div class="p-6">
+            <!-- Client info + rating -->
+            <div class="flex items-start justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="avatar avatar-primary w-10 h-10 text-sm">
+                  <%= review.client.name&.first&.upcase || "?" %>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-900 text-sm"><%= review.client.name %></p>
+                  <p class="text-xs text-gray-400"><%= review.booking.service.title %> · <%= time_ago_in_words(review.created_at) %></p>
+                </div>
+              </div>
+              <div class="flex items-center gap-0.5">
+                <% 5.times do |i| %>
+                  <svg class="w-4 h-4 <%= i < review.rating ? 'text-yellow-400' : 'text-gray-200' %>" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                <% end %>
+              </div>
+            </div>
+
+            <!-- Comment -->
+            <% if review.comment.present? %>
+              <p class="text-gray-600 text-sm mb-4"><%= review.comment %></p>
+            <% end %>
+
+            <!-- Pro reply -->
+            <% if review.pro_reply.present? %>
+              <div class="mt-4 pl-4 border-l-2 border-violet-200 bg-violet-50/50 rounded-r-xl p-4">
+                <p class="text-xs font-semibold text-violet-600 uppercase tracking-wider mb-1">Tu respuesta</p>
+                <p class="text-sm text-gray-700"><%= review.pro_reply %></p>
+                <p class="text-xs text-gray-400 mt-2"><%= time_ago_in_words(review.pro_replied_at) %></p>
+              </div>
+            <% else %>
+              <!-- Reply form -->
+              <div class="mt-4 pt-4 border-t border-gray-100">
+                <%= form_with url: reply_pro_review_path(review), method: :patch, class: "flex gap-3" do |f| %>
+                  <%= f.text_area :pro_reply, name: "review[pro_reply]",
+                      rows: 2, maxlength: 1000,
+                      class: "flex-1 rounded-xl border-gray-300 focus:border-violet-500 focus:ring-violet-500 text-sm resize-none",
+                      placeholder: "Escribí tu respuesta..." %>
+                  <%= f.submit "Responder", class: "btn-primary text-sm py-2 px-4 self-end cursor-pointer shrink-0" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="card p-12">
+      <%= render "components/empty_state",
+          title: "Sin reseñas",
+          message: "Cuando tus clientes dejen reseñas, aparecerán acá",
+          icon: "search" %>
+    </div>
+  <% end %>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_24_202556) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_25_195309) do
   create_table "availability_blocks", force: :cascade do |t|
     t.integer "professional_id", null: false
     t.date "date", null: false
@@ -124,6 +124,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_24_202556) do
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "pro_reply"
+    t.datetime "pro_replied_at"
     t.index ["booking_id"], name: "index_reviews_on_booking_id"
     t.index ["client_id"], name: "index_reviews_on_client_id"
     t.index ["professional_id"], name: "index_reviews_on_professional_id"

@@ -5,11 +5,14 @@ class Review < ApplicationRecord
 
   validates :rating, presence: true, inclusion: { in: 1..5 }
   validates :comment, length: { maximum: 1000 }
+  validates :pro_reply, length: { maximum: 1000 }
   validates :booking_id, uniqueness: true
   validate :booking_completed
   validate :client_is_booking_client
 
   scope :recent, -> { order(created_at: :desc) }
+  scope :replied, -> { where.not(pro_reply: nil) }
+  scope :unreplied, -> { where(pro_reply: nil) }
 
   after_create :update_professional_rating
 

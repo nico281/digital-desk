@@ -1,212 +1,195 @@
 <% content_for :title, "Reserva ##{@booking.id}" %>
 
-<div class="page-header">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <% back_path = params[:from] == "pro" ? pro_bookings_path : dashboard_path %>
-    <% back_label = params[:from] == "pro" ? "Reservas recibidas" : "Mi Panel" %>
-    <div class="flex items-center gap-2 text-gray-400 text-sm mb-2">
-      <%= link_to "Inicio", root_path, class: "hover:text-white", data: { turbo_action: "advance" } %>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<%
+  status_config = {
+    "pending"   => { bg: "bg-yellow-50", dot: "bg-yellow-400", text: "text-yellow-700", border: "border-yellow-200", label: "Pendiente de confirmación" },
+    "confirmed" => { bg: "bg-green-50",  dot: "bg-green-400",  text: "text-green-700",  border: "border-green-200", label: "Confirmada" },
+    "completed" => { bg: "bg-blue-50",   dot: "bg-blue-400",   text: "text-blue-700",   border: "border-blue-200",  label: "Finalizada" },
+    "cancelled" => { bg: "bg-gray-50",   dot: "bg-gray-400",   text: "text-gray-600",   border: "border-gray-200",  label: "Cancelada" },
+  }
+  sc = status_config[@booking.status] || status_config["pending"]
+  block = @booking.availability_block
+  back_path = params[:from] == "pro" ? pro_bookings_path : dashboard_path
+  back_label = params[:from] == "pro" ? "Reservas recibidas" : "Mi Panel"
+%>
+
+<!-- Header -->
+<div class="bg-white border-b border-gray-200">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex items-center gap-2 text-sm text-gray-400 mb-4">
+      <%= link_to back_label, back_path, class: "hover:text-gray-700 transition-colors", data: { turbo_action: "advance" } %>
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
       </svg>
-      <%= link_to back_label, back_path, class: "hover:text-white", data: { turbo_action: "advance" } %>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-      </svg>
-      <span class="text-white">Reserva #<%= @booking.id %></span>
+      <span class="text-gray-700">Reserva #<%= @booking.id %></span>
     </div>
-    <h1 class="page-header-title">Detalles de la reserva</h1>
+
+    <div class="flex items-start justify-between flex-wrap gap-4">
+      <div class="flex items-center gap-4">
+        <div class="avatar avatar-primary avatar-lg">
+          <%= @booking.professional.user.name.first.upcase %>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-gray-900"><%= @booking.service.title %></h1>
+          <p class="text-gray-500">con <%= @booking.professional.user.name %></p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-full <%= sc[:bg] %> <%= sc[:border] %> border">
+        <div class="w-2 h-2 rounded-full <%= sc[:dot] %>"></div>
+        <span class="text-sm font-medium <%= sc[:text] %>"><%= sc[:label] %></span>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-    <!-- Status Banner -->
-    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between
-      <%= case @booking.status
-          when 'confirmed' then 'bg-green-50'
-          when 'pending' then 'bg-yellow-50'
-          when 'completed' then 'bg-blue-50'
-          else 'bg-gray-50'
-          end %>">
-      <div class="flex items-center gap-3">
-        <div class="w-3 h-3 rounded-full
-          <%= case @booking.status
-              when 'confirmed' then 'bg-green-500'
-              when 'pending' then 'bg-yellow-500'
-              when 'completed' then 'bg-blue-500'
-              else 'bg-gray-400'
-              end %>"></div>
-        <span class="font-semibold
-          <%= case @booking.status
-              when 'confirmed' then 'text-green-700'
-              when 'pending' then 'text-yellow-700'
-              when 'completed' then 'text-blue-700'
-              else 'text-gray-700'
-              end %>">
-          <%= case @booking.status
-              when 'pending' then 'Pendiente de confirmación'
-              when 'confirmed' then 'Confirmada'
-              when 'completed' then 'Finalizada'
-              when 'cancelled' then 'Cancelada'
-              end %>
-        </span>
-      </div>
-
-      <% if @booking.pending? && @booking.confirmation_deadline_at %>
-        <span class="text-sm text-yellow-700">
-          El profesional tiene hasta las <%= @booking.confirmation_deadline_at.strftime("%H:%M del %d/%m") %> para confirmar
-        </span>
-      <% end %>
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+  <!-- Date, time, price row -->
+  <div class="grid grid-cols-3 gap-4">
+    <div class="card p-5 text-center">
+      <svg class="w-5 h-5 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+      </svg>
+      <p class="font-semibold text-gray-900 text-sm"><%= l(block.date, format: :long) %></p>
     </div>
+    <div class="card p-5 text-center">
+      <svg class="w-5 h-5 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <p class="font-semibold text-gray-900 text-sm"><%= block.start_time&.strftime("%H:%M") %> — <%= block.end_time&.strftime("%H:%M") %></p>
+    </div>
+    <div class="card p-5 text-center">
+      <svg class="w-5 h-5 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <p class="font-semibold text-gray-900 text-sm"><%= number_to_currency(@booking.service.price, unit: "$", precision: 0) %></p>
+    </div>
+  </div>
 
-    <!-- Booking Details -->
+  <% if @booking.pending? && @booking.confirmation_deadline_at %>
+    <div class="flex items-center gap-3 p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
+      <svg class="w-5 h-5 text-yellow-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <p class="text-sm text-yellow-700">
+        El profesional tiene hasta las <strong><%= @booking.confirmation_deadline_at.strftime("%H:%M del %d/%m") %></strong> para confirmar
+      </p>
+    </div>
+  <% end %>
+
+  <!-- Service details -->
+  <div class="card">
     <div class="p-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Service Info -->
-        <div>
-          <h3 class="text-sm font-medium text-gray-500 mb-2">Servicio</h3>
-          <p class="text-lg font-semibold text-gray-900"><%= @booking.service.title %></p>
-          <p class="text-gray-600 mt-1"><%= @booking.service.description %></p>
-          <p class="text-gray-500 text-sm mt-2">
-            Duración: <%= @booking.service.duration_minutes %> minutos
-          </p>
-        </div>
-
-        <!-- Professional Info -->
-        <div>
-          <h3 class="text-sm font-medium text-gray-500 mb-2">Profesional</h3>
-          <div class="flex items-center gap-3">
-            <div class="avatar avatar-primary avatar-md">
-              <%= @booking.professional.user.name.first.upcase %>
-            </div>
-            <div>
-              <p class="font-semibold text-gray-900"><%= @booking.professional.user.name %></p>
-              <p class="text-sm text-gray-500"><%= @booking.professional.headline %></p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Date & Time -->
-        <div>
-          <h3 class="text-sm font-medium text-gray-500 mb-2">Fecha y hora</h3>
-          <p class="text-lg font-semibold text-gray-900">
-            <%= @booking.availability_block.date&.strftime("%A, %d de %B de %Y") %>
-          </p>
-          <p class="text-gray-600">
-            <%= @booking.availability_block.start_time&.strftime("%H:%M") %> - <%= @booking.availability_block.end_time&.strftime("%H:%M") %>
-          </p>
-        </div>
-
-        <!-- Price -->
-        <div>
-          <h3 class="text-sm font-medium text-gray-500 mb-2">Total</h3>
-          <p class="text-2xl font-bold text-gray-900">
-            <%= number_to_currency(@booking.service.price, unit: "$", precision: 0) %>
-          </p>
-          <p class="text-sm text-gray-500">Precio del servicio</p>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="mt-8 pt-6 border-t border-gray-100 flex flex-wrap gap-3">
-        <% if @booking.pending? || @booking.confirmed? %>
-          <% if @booking.client == current_user %>
-            <%= button_to cancel_booking_path(@booking), method: :post,
-                class: "px-4 py-2 border border-red-200 text-red-700 text-sm font-medium rounded-lg hover:bg-red-50 transition-colors",
-                data: { turbo_confirm: "¿Estás seguro de cancelar esta reserva?" } do %>
-              Cancelar reserva
-            <% end %>
-          <% end %>
+      <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Detalle del servicio</h2>
+      <p class="text-gray-600 text-sm"><%= @booking.service.description %></p>
+      <div class="flex items-center gap-4 mt-4 pt-4 border-t border-gray-100 text-sm text-gray-500">
+        <span>Duración: <%= @booking.service.duration_minutes %> min</span>
+        <% if @booking.professional.headline.present? %>
+          <span>·</span>
+          <span><%= @booking.professional.headline %></span>
         <% end %>
-
-        <%= link_to "Volver a #{back_label.downcase}", back_path, class: "px-4 py-2 text-gray-700 text-sm font-medium hover:text-gray-900", data: { turbo_action: "advance" } %>
       </div>
     </div>
   </div>
 
   <!-- Video Section -->
   <% if @booking.confirmed? && @booking.meeting_room_id.present? %>
-    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden mt-6">
-      <div class="p-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-          </svg>
-          Videollamada
-        </h3>
-
-        <% if @video_available %>
-          <p class="text-gray-600 text-sm mb-4">La sala está lista. Ingresá para iniciar la videollamada.</p>
-          <%= link_to room_booking_path(@booking), class: "btn btn-primary py-3 px-8", data: { turbo: false } do %>
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-            </svg>
-            Ingresar a la videollamada
-          <% end %>
-        <% else %>
-          <div class="text-center py-6">
-            <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="card overflow-hidden">
+      <% if @video_available %>
+        <div class="p-6 bg-gradient-to-br from-violet-50 to-white border-b border-violet-100">
+          <div class="flex items-center justify-between flex-wrap gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center">
+                <svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-900">Videollamada lista</p>
+                <p class="text-sm text-gray-500">La sala está lista para ingresar</p>
+              </div>
+            </div>
+            <%= link_to room_booking_path(@booking), class: "btn btn-primary py-2.5 px-6", data: { turbo: false } do %>
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+              </svg>
+              Ingresar
+            <% end %>
+          </div>
+        </div>
+      <% else %>
+        <div class="p-6 text-center">
+          <div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mx-auto mb-3">
+            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
             </svg>
-            <p class="text-gray-500 text-sm">
-              La videollamada estará disponible 15 minutos antes del horario reservado
-            </p>
-            <p class="text-gray-400 text-xs mt-1">
-              <%= @booking.start_time.strftime("%H:%M") %> - <%= @booking.end_time.strftime("%H:%M") %>
-            </p>
           </div>
-        <% end %>
-      </div>
+          <p class="text-gray-500 text-sm">Disponible 15 minutos antes del turno</p>
+          <p class="text-gray-400 text-xs mt-1"><%= block.start_time&.strftime("%H:%M") %> — <%= block.end_time&.strftime("%H:%M") %></p>
+        </div>
+      <% end %>
     </div>
   <% end %>
 
   <!-- Review Section -->
   <% if @booking.completed? && @booking.client == current_user %>
-    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden mt-6">
-      <div class="p-6">
-        <% if @booking.review.present? %>
-          <h3 class="text-lg font-bold text-gray-900 mb-3">Tu reseña</h3>
-          <div class="flex items-center gap-1 mb-2">
-            <% 5.times do |i| %>
-              <svg class="w-5 h-5 <%= i < @booking.review.rating ? 'text-yellow-400' : 'text-gray-200' %>" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-              </svg>
-            <% end %>
-          </div>
-          <% if @booking.review.comment.present? %>
-            <p class="text-gray-600"><%= @booking.review.comment %></p>
+    <div class="card p-6">
+      <% if @booking.review.present? %>
+        <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Tu reseña</h2>
+        <div class="flex items-center gap-1 mb-3">
+          <% 5.times do |i| %>
+            <svg class="w-5 h-5 <%= i < @booking.review.rating ? 'text-yellow-400' : 'text-gray-200' %>" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
           <% end %>
-        <% else %>
-          <h3 class="text-lg font-bold text-gray-900 mb-4">Dejá tu reseña</h3>
-          <%= form_with model: [@booking, Review.new], url: booking_review_path(@booking), method: :post do |f| %>
-            <div class="mb-4" data-controller="star-rating">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Calificación</label>
-              <div class="flex gap-1" data-star-rating-target="stars">
-                <% 5.times do |i| %>
-                  <button type="button" data-action="star-rating#rate" data-star-rating-value-param="<%= i + 1 %>"
-                    class="text-gray-300 hover:text-yellow-400 transition-colors">
-                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                  </button>
-                <% end %>
-              </div>
-              <input type="hidden" name="review[rating]" value="" data-star-rating-target="input">
-            </div>
-
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Comentario (opcional)</label>
-              <%= f.text_area :comment, name: "review[comment]",
-                  rows: 3, maxlength: 1000,
-                  class: "w-full rounded-xl border-gray-300 focus:border-gray-900 focus:ring-gray-900 text-sm",
-                  placeholder: "Contá tu experiencia..." %>
-            </div>
-
-            <%= f.submit "Enviar reseña", class: "btn-primary text-sm py-2 px-6 cursor-pointer" %>
-          <% end %>
+        </div>
+        <% if @booking.review.comment.present? %>
+          <p class="text-gray-600 text-sm"><%= @booking.review.comment %></p>
         <% end %>
-      </div>
+      <% else %>
+        <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Dejá tu reseña</h2>
+        <%= form_with model: [@booking, Review.new], url: booking_review_path(@booking), method: :post do |f| %>
+          <div class="mb-4" data-controller="star-rating">
+            <div class="flex gap-1" data-star-rating-target="stars">
+              <% 5.times do |i| %>
+                <button type="button" data-action="star-rating#rate" data-star-rating-value-param="<%= i + 1 %>"
+                  class="text-gray-300 hover:text-yellow-400 transition-colors">
+                  <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                </button>
+              <% end %>
+            </div>
+            <input type="hidden" name="review[rating]" value="" data-star-rating-target="input">
+          </div>
+
+          <div class="mb-4">
+            <%= f.text_area :comment, name: "review[comment]",
+                rows: 3, maxlength: 1000,
+                class: "w-full rounded-xl border-gray-300 focus:border-gray-900 focus:ring-gray-900 text-sm",
+                placeholder: "Contá tu experiencia..." %>
+          </div>
+
+          <%= f.submit "Enviar reseña", class: "btn-primary text-sm py-2 px-6 cursor-pointer" %>
+        <% end %>
+      <% end %>
     </div>
   <% end %>
+
+  <!-- Actions -->
+  <div class="flex items-center justify-between">
+    <%= link_to back_label, back_path, class: "text-sm text-gray-500 hover:text-gray-700 transition-colors", data: { turbo_action: "advance" } do %>
+      <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+      Volver
+    <% end %>
+
+    <% if (@booking.pending? || @booking.confirmed?) && @booking.client == current_user %>
+      <%= button_to cancel_booking_path(@booking), method: :post,
+          class: "text-sm text-red-600 hover:text-red-700 font-medium transition-colors",
+          data: { turbo_confirm: "¿Estás seguro de cancelar esta reserva?" } do %>
+        Cancelar reserva
+      <% end %>
+    <% end %>
+  </div>
 </div>

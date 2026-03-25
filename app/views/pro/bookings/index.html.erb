@@ -1,57 +1,141 @@
 <% content_for :title, "Reservas recibidas" %>
 
-<% status_labels = { "pending" => "Pendientes", "confirmed" => "Confirmadas", "completed" => "Finalizadas", "cancelled" => "Canceladas" } %>
-<% status_badges = { "pending" => "badge-yellow", "confirmed" => "badge-green", "completed" => "badge-blue", "cancelled" => "badge-gray" } %>
+<%
+  status_labels = { "pending" => "Pendientes", "confirmed" => "Confirmadas", "completed" => "Finalizadas", "cancelled" => "Canceladas" }
+  status_badges = { "pending" => "badge-yellow", "confirmed" => "badge-green", "completed" => "badge-blue", "cancelled" => "badge-gray" }
+  dot_colors = { "pending" => "bg-yellow-400", "confirmed" => "bg-green-400", "completed" => "bg-blue-400", "cancelled" => "bg-gray-300" }
+  pending_count = @status_counts["pending"] || 0
+  confirmed_count = @status_counts["confirmed"] || 0
+  completed_count = @status_counts["completed"] || 0
+  cancelled_count = @status_counts["cancelled"] || 0
+%>
 
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
   <div class="mb-6">
     <h1 class="text-2xl font-bold text-gray-900">Reservas recibidas</h1>
     <p class="text-sm text-gray-500 mt-1">Gestioná las reservas de tus clientes</p>
   </div>
-  <!-- Filters -->
-  <div class="flex flex-wrap gap-2 mb-6">
-    <%= link_to "Todas", pro_bookings_path, class: "badge #{@filter.blank? ? 'bg-gray-900 text-white' : 'badge-gray'}", data: { turbo_action: "replace" } %>
-    <% status_labels.each do |status, label| %>
-      <%= link_to label, pro_bookings_path(status: status), class: "badge #{@filter == status ? 'bg-gray-900 text-white' : 'badge-gray'}", data: { turbo_action: "replace" } %>
+
+  <!-- Stat cards -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+    <%= link_to pro_bookings_path(status: :pending), class: "card p-4 hover:shadow-md transition-all #{@filter == 'pending' ? 'ring-2 ring-yellow-400' : ''}", data: { turbo_action: "replace" } do %>
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-xs font-medium text-gray-500">Pendientes</span>
+        <div class="w-2 h-2 rounded-full bg-yellow-400"></div>
+      </div>
+      <p class="text-2xl font-bold text-gray-900"><%= pending_count %></p>
+    <% end %>
+
+    <%= link_to pro_bookings_path(status: :confirmed), class: "card p-4 hover:shadow-md transition-all #{@filter == 'confirmed' ? 'ring-2 ring-green-400' : ''}", data: { turbo_action: "replace" } do %>
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-xs font-medium text-gray-500">Confirmadas</span>
+        <div class="w-2 h-2 rounded-full bg-green-400"></div>
+      </div>
+      <p class="text-2xl font-bold text-gray-900"><%= confirmed_count %></p>
+    <% end %>
+
+    <%= link_to pro_bookings_path(status: :completed), class: "card p-4 hover:shadow-md transition-all #{@filter == 'completed' ? 'ring-2 ring-blue-400' : ''}", data: { turbo_action: "replace" } do %>
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-xs font-medium text-gray-500">Finalizadas</span>
+        <div class="w-2 h-2 rounded-full bg-blue-400"></div>
+      </div>
+      <p class="text-2xl font-bold text-gray-900"><%= completed_count %></p>
+    <% end %>
+
+    <%= link_to pro_bookings_path(status: :cancelled), class: "card p-4 hover:shadow-md transition-all #{@filter == 'cancelled' ? 'ring-2 ring-gray-300' : ''}", data: { turbo_action: "replace" } do %>
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-xs font-medium text-gray-500">Canceladas</span>
+        <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+      </div>
+      <p class="text-2xl font-bold text-gray-900"><%= cancelled_count %></p>
     <% end %>
   </div>
 
-  <% if @bookings.any? %>
-    <div class="space-y-4">
-      <% @bookings.each do |booking| %>
-        <div class="card p-6 flex items-center justify-between">
-          <div class="flex items-center gap-4">
-            <div class="avatar avatar-primary avatar-md">
-              <%= booking.client.name&.first&.upcase || "?" %>
-            </div>
-            <div>
-              <h3 class="font-semibold text-gray-900"><%= booking.service.title %></h3>
-              <p class="text-sm text-gray-500"><%= booking.client.name %></p>
-              <% if booking.date %>
-                <p class="text-sm text-gray-400 mt-1">
-                  <%= l(booking.date, format: :long) %> · <%= booking.start_time&.strftime("%H:%M") %> — <%= booking.end_time&.strftime("%H:%M") %>
-                </p>
-              <% end %>
-            </div>
-          </div>
+  <!-- Active filter indicator -->
+  <% if @filter.present? %>
+    <div class="flex items-center gap-2 mb-4">
+      <span class="text-sm text-gray-500">Mostrando: <strong class="text-gray-900"><%= status_labels[@filter] %></strong></span>
+      <%= link_to pro_bookings_path, class: "text-sm text-violet-600 hover:text-violet-700 font-medium", data: { turbo_action: "replace" } do %>
+        Ver todas →
+      <% end %>
+    </div>
+  <% end %>
 
-          <div class="flex items-center gap-3">
-            <span class="badge <%= status_badges[booking.status] %>">
-              <%= status_labels[booking.status] || booking.status.capitalize %>
-            </span>
-            <% if booking.pending? %>
-              <%= button_to "Confirmar", confirm_pro_booking_path(booking), method: :post, class: "btn btn-primary text-sm py-2 px-3", data: { turbo_confirm: "¿Confirmar esta reserva?" } %>
-              <%= button_to "Rechazar", reject_pro_booking_path(booking), method: :post, class: "btn-secondary text-sm py-2 px-3 text-red-600 border-red-200 hover:bg-red-50", data: { turbo_confirm: "¿Rechazar esta reserva?" } %>
-            <% end %>
-            <%= link_to "Ver", booking_path(booking, from: "pro"), class: "btn-secondary text-sm py-2 px-3", data: { turbo_action: "advance" } %>
+  <!-- Booking list -->
+  <% if @bookings.any? %>
+    <div class="space-y-3">
+      <% @bookings.each do |booking| %>
+        <div class="card hover:shadow-md transition-all overflow-hidden">
+          <div class="flex items-stretch">
+            <!-- Status bar left -->
+            <div class="w-1 shrink-0 <%= dot_colors[booking.status] %>"></div>
+
+            <div class="flex-1 px-5 py-4">
+              <div class="flex items-center justify-between flex-wrap gap-3">
+                <!-- Client + service info -->
+                <div class="flex items-center gap-4">
+                  <div class="avatar avatar-primary w-10 h-10 text-sm">
+                    <%= booking.client.name&.first&.upcase || "?" %>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h3 class="font-semibold text-gray-900 text-sm"><%= booking.client.name %></h3>
+                      <span class="badge <%= status_badges[booking.status] %> text-[11px]">
+                        <%= status_labels[booking.status] || booking.status.capitalize %>
+                      </span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-0.5"><%= booking.service.title %></p>
+                    <% if booking.date %>
+                      <div class="flex items-center gap-3 mt-1 text-xs text-gray-400">
+                        <span class="flex items-center gap-1">
+                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                          </svg>
+                          <%= l(booking.date, format: :long) %>
+                        </span>
+                        <span class="flex items-center gap-1">
+                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                          </svg>
+                          <%= booking.start_time&.strftime("%H:%M") %> — <%= booking.end_time&.strftime("%H:%M") %>
+                        </span>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-2">
+                  <% if booking.pending? %>
+                    <%= button_to confirm_pro_booking_path(booking), method: :post, class: "btn btn-primary text-xs py-1.5 px-3", data: { turbo_confirm: "¿Confirmar esta reserva?" } do %>
+                      <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                      </svg>
+                      Confirmar
+                    <% end %>
+                    <%= button_to reject_pro_booking_path(booking), method: :post, class: "btn-secondary text-xs py-1.5 px-3 text-red-600 border-red-200 hover:bg-red-50", data: { turbo_confirm: "¿Rechazar esta reserva?" } do %>
+                      Rechazar
+                    <% end %>
+                  <% end %>
+                  <%= link_to booking_path(booking, from: "pro"), class: "p-2 rounded-lg text-gray-400 hover:text-gray-900 hover:bg-gray-100 transition-colors", data: { turbo_action: "advance" } do %>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  <% end %>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       <% end %>
     </div>
   <% else %>
-    <%= render "components/empty_state",
-        title: @filter.present? ? "Sin reservas #{status_labels[@filter]&.downcase}" : "Sin reservas",
-        message: "Las reservas de tus clientes aparecerán acá",
-        icon: "calendar" %>
+    <div class="card p-12">
+      <%= render "components/empty_state",
+          title: @filter.present? ? "Sin reservas #{status_labels[@filter]&.downcase}" : "Sin reservas",
+          message: "Las reservas de tus clientes aparecerán acá",
+          icon: "calendar" %>
+    </div>
   <% end %>
 </div>

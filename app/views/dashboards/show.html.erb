@@ -1,66 +1,242 @@
 <% content_for :title, "Mi Panel" %>
 
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
   <!-- Welcome -->
-  <div class="mb-8">
-    <h1 class="text-2xl font-bold text-gray-900">Hola, <%= @user.name.split(' ').first %></h1>
-    <p class="text-gray-500 mt-1">Bienvenido a tu panel</p>
-  </div>
-
-  <!-- My Bookings -->
-  <div class="card p-6 mb-6">
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="text-lg font-semibold text-gray-900">Mis próximas reservas</h2>
-      <%= link_to search_path, class: "text-sm text-violet-600 hover:text-violet-700 font-medium", data: { turbo_action: "advance" } do %>
-        Buscar profesionales →
-      <% end %>
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Hola, <%= @user.name.split(' ').first %></h1>
+      <p class="text-gray-500 mt-1 text-sm"><%= l(Date.current, format: :long) %></p>
     </div>
-
-    <% if @upcoming_bookings.any? %>
-      <div class="space-y-4">
-        <% @upcoming_bookings.each do |booking| %>
-          <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-            <div class="flex items-center gap-4">
-              <div class="avatar avatar-primary avatar-md">
-                <%= booking.professional.user.name.first.upcase %>
-              </div>
-              <div>
-                <p class="font-medium text-gray-900"><%= booking.service.title %></p>
-                <p class="text-sm text-gray-500">con <%= booking.professional.user.name %></p>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-2">
-              <span class="badge <%= booking.confirmed? ? 'badge-green' : 'badge-yellow' %>">
-                <%= booking.confirmed? ? 'Confirmada' : 'Pendiente' %>
-              </span>
-              <%= link_to "Ver", booking_path(booking), class: "btn-secondary text-sm py-1.5 px-3", data: { turbo_action: "advance" } %>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    <% else %>
-      <%= render "components/empty_state",
-          title: "No tienes reservas",
-          message: "Explorá profesionales y reservá tu primera sesión",
-          icon: "calendar" %>
+    <%= link_to search_path, class: "btn-primary text-sm", data: { turbo_action: "advance" } do %>
+      <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+      Buscar profesionales
     <% end %>
   </div>
 
-  <% if @professional %>
-    <div class="card p-6">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-lg font-semibold text-gray-900">Reservas recibidas</h2>
-          <p class="text-sm text-gray-500 mt-1">Gestioná las reservas de tus clientes</p>
+  <!-- Quick stats -->
+  <% client_pending = @upcoming_bookings.select(&:pending?).size %>
+  <% client_confirmed = @upcoming_bookings.select(&:confirmed?).size %>
+  <div class="grid grid-cols-2 sm:grid-cols-<%= @professional ? '4' : '2' %> gap-4">
+    <div class="card p-4 text-center">
+      <p class="text-2xl font-bold text-gray-900"><%= client_confirmed %></p>
+      <p class="text-xs text-gray-500 mt-1">Confirmadas</p>
+    </div>
+    <div class="card p-4 text-center">
+      <p class="text-2xl font-bold text-yellow-600"><%= client_pending %></p>
+      <p class="text-xs text-gray-500 mt-1">Pendientes</p>
+    </div>
+    <% if @professional %>
+      <div class="card p-4 text-center">
+        <p class="text-2xl font-bold text-violet-600"><%= @pro_services_count %></p>
+        <p class="text-xs text-gray-500 mt-1">Servicios activos</p>
+      </div>
+      <div class="card p-4 text-center">
+        <p class="text-2xl font-bold text-orange-600"><%= @pending_pro_bookings_count %></p>
+        <p class="text-xs text-gray-500 mt-1">Por confirmar</p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Next session (highlighted) -->
+  <% if @next_booking %>
+    <div class="card p-6 border-violet-200 bg-gradient-to-br from-violet-50 to-white">
+      <p class="text-xs font-semibold text-violet-600 uppercase tracking-wider mb-3">Próxima sesión</p>
+      <div class="flex items-center justify-between flex-wrap gap-4">
+        <div class="flex items-center gap-4">
+          <div class="avatar avatar-primary avatar-md">
+            <%= @next_booking.professional.user.name.first.upcase %>
+          </div>
+          <div>
+            <p class="font-semibold text-gray-900"><%= @next_booking.service.title %></p>
+            <p class="text-sm text-gray-500">con <%= @next_booking.professional.user.name %></p>
+            <p class="text-sm text-violet-600 font-medium mt-0.5">
+              <%= l(@next_booking.date, format: :long) %> · <%= @next_booking.start_time&.strftime("%H:%M") %>
+            </p>
+          </div>
         </div>
-        <%= link_to pro_bookings_path, class: "btn btn-primary text-sm py-2 px-4", data: { turbo_action: "advance" } do %>
-          Ver reservas
-          <svg class="w-4 h-4 ml-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
+        <div class="flex items-center gap-2">
+          <% if @next_booking.date == Date.current %>
+            <%= link_to room_booking_path(@next_booking), class: "btn btn-primary text-sm py-2 px-4", data: { turbo_action: "advance" } do %>
+              <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+              </svg>
+              Ingresar
+            <% end %>
+          <% end %>
+          <%= link_to "Ver", booking_path(@next_booking), class: "btn-secondary text-sm py-2 px-3", data: { turbo_action: "advance" } %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Upcoming bookings -->
+  <div class="card">
+    <div class="flex items-center justify-between p-6 pb-0">
+      <h2 class="text-lg font-semibold text-gray-900">Mis reservas</h2>
+      <% if @upcoming_bookings.any? %>
+        <span class="text-sm text-gray-400"><%= @upcoming_bookings.size %> próximas</span>
+      <% end %>
+    </div>
+
+    <% remaining = @next_booking ? @upcoming_bookings.reject { |b| b.id == @next_booking.id } : @upcoming_bookings %>
+
+    <% if remaining.any? %>
+      <div class="divide-y divide-gray-100">
+        <% remaining.each do |booking| %>
+          <%= link_to booking_path(booking), class: "flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors", data: { turbo_action: "advance" } do %>
+            <div class="flex items-center gap-3">
+              <div class="avatar avatar-primary w-9 h-9 text-sm">
+                <%= booking.professional.user.name.first.upcase %>
+              </div>
+              <div>
+                <p class="font-medium text-gray-900 text-sm"><%= booking.service.title %></p>
+                <p class="text-xs text-gray-500">
+                  con <%= booking.professional.user.name %> · <%= l(booking.date, format: :long) %> · <%= booking.start_time&.strftime("%H:%M") %>
+                </p>
+              </div>
+            </div>
+            <span class="badge <%= booking.confirmed? ? 'badge-green' : 'badge-yellow' %>">
+              <%= booking.confirmed? ? 'Confirmada' : 'Pendiente' %>
+            </span>
+          <% end %>
         <% end %>
       </div>
+    <% elsif @next_booking.nil? %>
+      <div class="p-6">
+        <%= render "components/empty_state",
+            title: "No tenés reservas",
+            message: "Explorá profesionales y reservá tu primera sesión",
+            icon: "calendar" %>
+      </div>
+    <% else %>
+      <p class="px-6 py-4 text-sm text-gray-400">No hay más reservas próximas</p>
+    <% end %>
+  </div>
+
+  <!-- Pro section -->
+  <% if @professional %>
+    <!-- Onboarding checklist (if incomplete) -->
+    <% steps = [
+      { done: @professional.headline.present?, label: "Completá tu perfil", desc: "Agregá tu titular y bio", path: pro_setup_path },
+      { done: @pro_services_count > 0, label: "Creá tu primer servicio", desc: "Definí qué ofrecés y a qué precio", path: new_pro_service_path },
+      { done: @has_availability, label: "Configurá tu disponibilidad", desc: "Elegí los horarios en que atendés", path: pro_availability_schedules_path },
+    ] %>
+    <% completed = steps.count { |s| s[:done] } %>
+
+    <% if completed < steps.size %>
+      <div class="card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">Empezá a recibir clientes</h2>
+          <span class="badge badge-gray"><%= completed %>/<%= steps.size %></span>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-1.5 mb-5">
+          <div class="bg-violet-600 h-1.5 rounded-full transition-all" style="width: <%= (completed.to_f / steps.size * 100).round %>%"></div>
+        </div>
+        <div class="space-y-1">
+          <% steps.each do |step| %>
+            <% if step[:done] %>
+              <div class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400">
+                <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="text-sm line-through"><%= step[:label] %></span>
+              </div>
+            <% else %>
+              <%= link_to step[:path], class: "flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-violet-50 transition-colors group", data: { turbo_action: "advance" } do %>
+                <div class="w-5 h-5 rounded-full border-2 border-gray-300 group-hover:border-violet-600 shrink-0 transition-colors"></div>
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900"><%= step[:label] %></p>
+                  <p class="text-xs text-gray-400"><%= step[:desc] %></p>
+                </div>
+                <svg class="w-4 h-4 text-gray-300 group-hover:text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Pending pro bookings -->
+    <% if @pending_pro_bookings_count > 0 %>
+      <div class="card">
+        <div class="flex items-center justify-between p-6 pb-4">
+          <div class="flex items-center gap-3">
+            <h2 class="text-lg font-semibold text-gray-900">Reservas por confirmar</h2>
+            <span class="badge badge-yellow"><%= @pending_pro_bookings_count %></span>
+          </div>
+          <%= link_to "Ver todas →", pro_bookings_path(status: :pending), class: "text-sm text-violet-600 hover:text-violet-700 font-medium", data: { turbo_action: "advance" } %>
+        </div>
+        <div class="divide-y divide-gray-100">
+          <% @pending_pro_bookings.each do |booking| %>
+            <div class="flex items-center justify-between px-6 py-4">
+              <div class="flex items-center gap-3">
+                <div class="avatar avatar-primary w-9 h-9 text-sm">
+                  <%= booking.client.name&.first&.upcase || "?" %>
+                </div>
+                <div>
+                  <p class="font-medium text-gray-900 text-sm"><%= booking.service.title %></p>
+                  <p class="text-xs text-gray-500">
+                    <%= booking.client.name %> · <%= l(booking.date, format: :long) %>
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <%= button_to "Confirmar", confirm_pro_booking_path(booking), method: :post, class: "btn btn-primary text-xs py-1.5 px-3", data: { turbo_confirm: "¿Confirmar esta reserva?" } %>
+                <%= link_to "Ver", booking_path(booking, from: "pro"), class: "btn-secondary text-xs py-1.5 px-3", data: { turbo_action: "advance" } %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Pro quick links (always visible for pro users) -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <%= link_to pro_services_path, class: "card card-hoverable p-5 group", data: { turbo_action: "advance" } do %>
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-9 h-9 rounded-xl bg-violet-100 flex items-center justify-center">
+            <svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+            </svg>
+          </div>
+          <div>
+            <p class="font-semibold text-gray-900 text-sm">Servicios</p>
+            <p class="text-xs text-gray-400"><%= @pro_services_count %> activos</p>
+          </div>
+        </div>
+      <% end %>
+
+      <%= link_to pro_availability_schedules_path, class: "card card-hoverable p-5 group", data: { turbo_action: "advance" } do %>
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="font-semibold text-gray-900 text-sm">Disponibilidad</p>
+            <p class="text-xs text-gray-400">Gestionar horarios</p>
+          </div>
+        </div>
+      <% end %>
+
+      <%= link_to pro_bookings_path, class: "card card-hoverable p-5 group", data: { turbo_action: "advance" } do %>
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center">
+            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+            </svg>
+          </div>
+          <div>
+            <p class="font-semibold text-gray-900 text-sm">Reservas</p>
+            <p class="text-xs text-gray-400">Ver todas</p>
+          </div>
+        </div>
+      <% end %>
     </div>
   <% end %>
 </div>
