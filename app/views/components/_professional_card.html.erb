@@ -3,8 +3,8 @@
   <div class="p-5">
     <div class="flex items-start gap-4">
       <!-- Avatar -->
-      <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center text-white text-xl font-semibold flex-shrink-0">
-        <%= professional.user&.name&.first&.upcase || "?" %>
+      <div class="flex-shrink-0">
+        <%= user_avatar(professional.user, size: :lg) %>
       </div>
 
       <!-- Info -->

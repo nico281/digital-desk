@@ -48,6 +48,30 @@
       </div>
     </div>
 
+    <!-- Video introductorio (opcional) -->
+    <div class="card p-6 space-y-4">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900">Video introductorio</h2>
+        <p class="text-sm text-gray-500 mt-1">Opcional. Un video corto para que los clientes te conozcan antes de reservar.</p>
+      </div>
+
+      <% if @professional.intro_video.attached? %>
+        <div class="rounded-xl overflow-hidden bg-black">
+          <%= video_tag url_for(@professional.intro_video), controls: true, class: "w-full max-h-64" %>
+        </div>
+        <label class="flex items-center gap-2 text-sm text-gray-500">
+          <input type="checkbox" name="remove_intro_video" value="1" class="rounded border-gray-300">
+          Eliminar video actual
+        </label>
+      <% end %>
+
+      <div>
+        <input type="file" name="professional_intro_video" accept="video/mp4,video/webm,video/quicktime"
+          class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-900 file:text-white hover:file:bg-gray-800 file:cursor-pointer">
+        <p class="text-xs text-gray-400 mt-2">MP4, WebM o MOV. Max 50MB, ~60 segundos recomendado.</p>
+      </div>
+    </div>
+
     <div class="flex justify-end">
       <%= f.submit @professional.persisted? ? "Guardar cambios" : "Crear perfil profesional", class: "btn btn-primary py-3 px-8 cursor-pointer" %>
     </div>

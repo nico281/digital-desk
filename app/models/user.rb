@@ -2,6 +2,7 @@ class User < ApplicationRecord
   has_one :professional, dependent: :destroy
   has_many :bookings_as_client, class_name: "Booking", foreign_key: :client_id, dependent: :destroy
   has_many :reviews_as_client, class_name: "Review", foreign_key: :client_id, dependent: :destroy
+  has_one_attached :avatar
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,

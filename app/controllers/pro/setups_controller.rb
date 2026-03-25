@@ -16,6 +16,13 @@ module Pro
         @professional.create_cancellation_policy! unless @professional.cancellation_policy
       end
 
+      # Intro video
+      if params[:remove_intro_video] == "1"
+        @professional.intro_video.purge
+      elsif params[:professional_intro_video].present?
+        @professional.intro_video.attach(params[:professional_intro_video])
+      end
+
       redirect_to pro_services_path, notice: "Perfil profesional guardado"
     rescue ActiveRecord::RecordInvalid
       @categories = Category.root.ordered

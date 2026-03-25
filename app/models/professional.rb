@@ -8,6 +8,7 @@ class Professional < ApplicationRecord
   has_many :categories, through: :professional_categories
   has_one :cancellation_policy, dependent: :destroy
   has_many :reviews, dependent: :destroy
+  has_one_attached :intro_video
 
   validates :headline, length: { maximum: 100 }
   validates :rating_avg, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 5 }

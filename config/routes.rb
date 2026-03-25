@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
   # Privadas (requieren auth)
   resource :dashboard, only: [ :show ]
+  resource :account, only: [ :show, :update ]
   resources :bookings, only: [ :show, :create ] do
     member do
       post "confirm"

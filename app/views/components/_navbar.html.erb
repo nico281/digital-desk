@@ -40,9 +40,7 @@
         <!-- Slim mode - Solo avatar/user -->
         <div class="flex items-center gap-4">
           <%= link_to dashboard_path, class: "flex items-center gap-2 p-1 rounded-lg hover:bg-gray-100 transition-colors", data: { turbo_action: "advance" } do %>
-            <div class="avatar avatar-primary avatar-sm">
-              <%= current_user.name&.first&.upcase || "?" %>
-            </div>
+            <%= user_avatar(current_user, size: :sm) %>
             <span class="hidden sm:block text-sm font-medium text-gray-700"><%= current_user.name.split(' ').first %></span>
           <% end %>
 

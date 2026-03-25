@@ -26,9 +26,7 @@
 
     <div class="flex items-start justify-between flex-wrap gap-4">
       <div class="flex items-center gap-4">
-        <div class="avatar avatar-primary avatar-lg">
-          <%= @booking.professional.user.name.first.upcase %>
-        </div>
+        <%= user_avatar(@booking.professional.user, size: :lg) %>
         <div>
           <h1 class="text-xl font-bold text-gray-900"><%= @booking.service.title %></h1>
           <p class="text-gray-500">con <%= @booking.professional.user.name %></p>

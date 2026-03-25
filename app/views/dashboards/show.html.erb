@@ -45,9 +45,7 @@
       <p class="text-xs font-semibold text-violet-600 uppercase tracking-wider mb-3">Próxima sesión</p>
       <div class="flex items-center justify-between flex-wrap gap-4">
         <div class="flex items-center gap-4">
-          <div class="avatar avatar-primary avatar-md">
-            <%= @next_booking.professional.user.name.first.upcase %>
-          </div>
+          <%= user_avatar(@next_booking.professional.user, size: :md) %>
           <div>
             <p class="font-semibold text-gray-900"><%= @next_booking.service.title %></p>
             <p class="text-sm text-gray-500">con <%= @next_booking.professional.user.name %></p>
@@ -87,9 +85,7 @@
         <% remaining.each do |booking| %>
           <%= link_to booking_path(booking), class: "flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors", data: { turbo_action: "advance" } do %>
             <div class="flex items-center gap-3">
-              <div class="avatar avatar-primary w-9 h-9 text-sm">
-                <%= booking.professional.user.name.first.upcase %>
-              </div>
+              <%= user_avatar(booking.professional.user, size: :sm) %>
               <div>
                 <p class="font-medium text-gray-900 text-sm"><%= booking.service.title %></p>
                 <p class="text-xs text-gray-500">
@@ -174,9 +170,7 @@
           <% @pending_pro_bookings.each do |booking| %>
             <div class="flex items-center justify-between px-6 py-4">
               <div class="flex items-center gap-3">
-                <div class="avatar avatar-primary w-9 h-9 text-sm">
-                  <%= booking.client.name&.first&.upcase || "?" %>
-                </div>
+                <%= user_avatar(booking.client, size: :sm) %>
                 <div>
                   <p class="font-medium text-gray-900 text-sm"><%= booking.service.title %></p>
                   <p class="text-xs text-gray-500">

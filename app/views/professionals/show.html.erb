@@ -10,8 +10,8 @@
       <div class="card shadow-lg overflow-hidden">
         <!-- Avatar -->
         <div class="p-6 flex flex-col items-center text-center border-b border-gray-100">
-          <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center text-white text-3xl font-bold mb-4">
-            <%= @professional.user&.name&.first&.upcase || "?" %>
+          <div class="mb-4">
+            <%= user_avatar(@professional.user, size: :xl) %>
           </div>
 
           <h1 class="text-xl font-bold text-gray-900"><%= @professional.user&.name %></h1>
@@ -61,6 +61,16 @@
 
     <!-- Main Content -->
     <div class="flex-1">
+      <!-- Intro video -->
+      <% if @professional.intro_video.attached? %>
+        <div class="card p-6 mb-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Presentación</h2>
+          <div class="rounded-xl overflow-hidden bg-black">
+            <%= video_tag url_for(@professional.intro_video), controls: true, class: "w-full" %>
+          </div>
+        </div>
+      <% end %>
+
       <!-- Services -->
       <div class="card p-6 mb-6">
         <h2 class="text-xl font-bold text-gray-900 mb-4">Servicios</h2>
@@ -118,9 +128,7 @@
               <div class="border-b border-gray-100 pb-6 last:border-0 last:pb-0">
                 <div class="flex items-start justify-between">
                   <div class="flex items-center gap-3">
-                    <div class="avatar avatar-primary avatar-sm">
-                      <%= review.client&.name&.first&.upcase || "?" %>
-                    </div>
+                    <%= user_avatar(review.client, size: :sm) %>
                     <div>
                       <p class="font-medium text-gray-900"><%= review.client&.name %></p>
                       <div class="flex items-center gap-1">
