@@ -1,6 +1,6 @@
 <% content_for :title, "Reservas recibidas" %>
 
-<% status_labels = { "pending" => "Pendientes", "confirmed" => "Confirmadas", "completed" => "Completadas", "cancelled" => "Canceladas" } %>
+<% status_labels = { "pending" => "Pendientes", "confirmed" => "Confirmadas", "completed" => "Finalizadas", "cancelled" => "Canceladas" } %>
 <% status_badges = { "pending" => "badge-yellow", "confirmed" => "badge-green", "completed" => "badge-blue", "cancelled" => "badge-gray" } %>
 
 <div class="page-header">
@@ -46,7 +46,7 @@
               <%= button_to "Confirmar", confirm_pro_booking_path(booking), method: :post, class: "btn btn-primary text-sm py-2 px-3", data: { turbo_confirm: "¿Confirmar esta reserva?" } %>
               <%= button_to "Rechazar", reject_pro_booking_path(booking), method: :post, class: "btn-secondary text-sm py-2 px-3 text-red-600 border-red-200 hover:bg-red-50", data: { turbo_confirm: "¿Rechazar esta reserva?" } %>
             <% end %>
-            <%= link_to "Ver", booking_path(booking), class: "btn-secondary text-sm py-2 px-3", data: { turbo_action: "advance" } %>
+            <%= link_to "Ver", booking_path(booking, from: "pro"), class: "btn-secondary text-sm py-2 px-3", data: { turbo_action: "advance" } %>
           </div>
         </div>
       <% end %>

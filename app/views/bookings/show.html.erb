@@ -2,12 +2,14 @@
 
 <div class="page-header">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <% back_path = params[:from] == "pro" ? pro_bookings_path : dashboard_path %>
+    <% back_label = params[:from] == "pro" ? "Reservas recibidas" : "Mi Panel" %>
     <div class="flex items-center gap-2 text-gray-400 text-sm mb-2">
       <%= link_to "Inicio", root_path, class: "hover:text-white", data: { turbo_action: "advance" } %>
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
       </svg>
-      <%= link_to "Mi Panel", dashboard_path, class: "hover:text-white", data: { turbo_action: "advance" } %>
+      <%= link_to back_label, back_path, class: "hover:text-white", data: { turbo_action: "advance" } %>
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
       </svg>
@@ -45,7 +47,7 @@
           <%= case @booking.status
               when 'pending' then 'Pendiente de confirmación'
               when 'confirmed' then 'Confirmada'
-              when 'completed' then 'Completada'
+              when 'completed' then 'Finalizada'
               when 'cancelled' then 'Cancelada'
               end %>
         </span>
@@ -118,7 +120,7 @@
           <% end %>
         <% end %>
 
-        <%= link_to "Volver al panel", dashboard_path, class: "px-4 py-2 text-gray-700 text-sm font-medium hover:text-gray-900", data: { turbo_action: "advance" } %>
+        <%= link_to "Volver a #{back_label.downcase}", back_path, class: "px-4 py-2 text-gray-700 text-sm font-medium hover:text-gray-900", data: { turbo_action: "advance" } %>
       </div>
     </div>
   </div>
