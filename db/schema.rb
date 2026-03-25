@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_24_034102) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_24_202556) do
   create_table "availability_blocks", force: :cascade do |t|
     t.integer "professional_id", null: false
     t.date "date", null: false
@@ -50,8 +50,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_24_034102) do
     t.string "meeting_room_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "confirmation_deadline_at"
     t.index ["availability_block_id"], name: "index_bookings_on_availability_block_id"
     t.index ["client_id"], name: "index_bookings_on_client_id"
+    t.index ["confirmation_deadline_at"], name: "index_bookings_on_confirmation_deadline_at"
     t.index ["payment_id"], name: "index_bookings_on_payment_id"
     t.index ["professional_id"], name: "index_bookings_on_professional_id"
     t.index ["service_id"], name: "index_bookings_on_service_id"

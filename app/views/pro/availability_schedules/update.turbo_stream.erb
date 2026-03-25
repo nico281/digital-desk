@@ -1,0 +1,7 @@
+<%= turbo_stream.update "schedule-list" do %>
+  <%= render partial: "pro/availability_schedules/schedule_list", locals: { schedules: @schedules, schedules_by_day: @schedules_by_day, animated: true } %>
+<% end %>
+
+<%= turbo_stream.update "flash" do %>
+  <%= render "components/toast" %>
+<% end %>

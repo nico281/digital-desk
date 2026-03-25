@@ -13,6 +13,11 @@ class AvailabilityBlock < ApplicationRecord
   scope :available, -> { where(status: :available) }
   scope :for_date, ->(date) { where(date:) }
   scope :upcoming, -> { where("date >= ?", Date.today) }
+  scope :with_lead_time, ->(hours) {
+    cutoff = Time.current + hours.hours
+    where("date > :today OR (date = :today AND start_time > :cutoff)",
+      today: Date.current, cutoff: cutoff.strftime("%H:%M:%S"))
+  }
 
   def book!(booking)
     update!(status: :booked, booking: booking)

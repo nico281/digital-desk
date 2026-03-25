@@ -39,6 +39,8 @@ module DigitalDesk
     # Don't generate system test files.
     config.generators.system_tests = nil
 
+    config.assets.paths << Rails.root.join("vendor/javascript")
+
     config.i18n.default_locale = :es
     config.i18n.available_locales = [ :es, :en ]
   end

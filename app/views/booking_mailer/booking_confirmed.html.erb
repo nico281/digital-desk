@@ -1,0 +1,30 @@
+<div class="header">
+  <h1>Reserva confirmada</h1>
+</div>
+
+<p>Hola <%= @client.name %>,</p>
+
+<p>Tu reserva con <strong><%= @professional.full_name %></strong> fue confirmada.</p>
+
+<div class="detail">
+  <div class="detail-label">Servicio</div>
+  <div class="detail-value"><%= @service.title %></div>
+</div>
+
+<div class="detail">
+  <div class="detail-label">Fecha</div>
+  <div class="detail-value"><%= l(@booking.date, format: :long) %></div>
+</div>
+
+<div class="detail">
+  <div class="detail-label">Horario</div>
+  <div class="detail-value"><%= @booking.start_time.strftime("%H:%M") %> - <%= @booking.end_time.strftime("%H:%M") %></div>
+</div>
+
+<p style="margin-top: 24px;">
+  <a href="<%= booking_url(@booking) %>" class="btn">Ver reserva</a>
+</p>
+
+<p style="font-size: 13px; color: #737373;">
+  La videollamada estará disponible 15 minutos antes del horario.
+</p>

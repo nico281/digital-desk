@@ -15,6 +15,6 @@ class DashboardsController < ApplicationController
     @upcoming_bookings = Booking.where(client: @user)
       .where(status: [ :pending, :confirmed ])
       .order(:created_at)
-      .includes(:professional, :service)
+      .includes({ professional: :user }, :service)
   end
 end

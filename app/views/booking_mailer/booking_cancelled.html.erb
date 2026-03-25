@@ -1,0 +1,29 @@
+<div class="header">
+  <h1>Reserva cancelada</h1>
+</div>
+
+<% if @cancelled_by == :client %>
+  <p>Hola <%= @professional.full_name %>,</p>
+  <p><strong><%= @client.name %></strong> canceló su reserva.</p>
+<% elsif @cancelled_by == :deadline %>
+  <p>Hola <%= @professional.full_name %>,</p>
+  <p>La reserva fue cancelada automáticamente porque no se confirmó a tiempo.</p>
+<% else %>
+  <p>Hola <%= @client.name %>,</p>
+  <p>Tu reserva fue cancelada.</p>
+<% end %>
+
+<div class="detail">
+  <div class="detail-label">Servicio</div>
+  <div class="detail-value"><%= @service.title %></div>
+</div>
+
+<div class="detail">
+  <div class="detail-label">Fecha</div>
+  <div class="detail-value"><%= l(@booking.date, format: :long) %></div>
+</div>
+
+<div class="detail">
+  <div class="detail-label">Horario</div>
+  <div class="detail-value"><%= @booking.start_time.strftime("%H:%M") %> - <%= @booking.end_time.strftime("%H:%M") %></div>
+</div>

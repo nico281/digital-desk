@@ -1,8 +1,16 @@
 class BookingsController < ApplicationController
-  before_action :require_authentication!, only: [ :show, :confirm, :cancel ]
-  before_action :set_booking, only: [ :show, :confirm, :cancel ]
+  before_action :require_authentication!, only: [ :show, :confirm, :cancel, :livekit_token, :room ]
+  before_action :set_booking, only: [ :show, :confirm, :cancel, :livekit_token, :room ]
 
   def show
+    @video_available = false
+    if @booking.confirmed? && @booking.meeting_room_id.present?
+      block = @booking.availability_block
+      booking_start = block.date.to_datetime + block.start_time.seconds_since_midnight.seconds
+      booking_end = block.date.to_datetime + block.end_time.seconds_since_midnight.seconds
+      now = Time.current
+      @video_available = now >= (booking_start - 15.minutes) && now <= booking_end
+    end
   end
 
   def create
@@ -33,8 +41,62 @@ class BookingsController < ApplicationController
   end
 
   def cancel
+    unless @booking.pending? || @booking.confirmed?
+      redirect_to @booking, alert: "No se puede cancelar esta reserva"
+      return
+    end
+
     @booking.cancel!
-    redirect_to @booking, notice: "Reserva cancelada"
+    BookingMailer.booking_cancelled(@booking, cancelled_by: :client).deliver_later
+    redirect_to dashboard_path, notice: "Reserva cancelada"
+  end
+
+  def room
+    unless @booking.confirmed? && @booking.meeting_room_id.present?
+      redirect_to @booking, alert: "La videollamada no está disponible"
+      return
+    end
+
+    unless current_user == @booking.client || current_user == @booking.professional.user
+      redirect_to @booking, alert: "No tenés acceso a esta videollamada"
+      return
+    end
+
+    block = @booking.availability_block
+    booking_start = block.date.to_datetime + block.start_time.seconds_since_midnight.seconds
+    booking_end = block.date.to_datetime + block.end_time.seconds_since_midnight.seconds
+    now = Time.current
+
+    unless now >= (booking_start - 15.minutes) && now <= booking_end
+      redirect_to @booking, alert: "La videollamada estará disponible 15 minutos antes del turno"
+      return
+    end
+
+    @other_participant = current_user == @booking.client ? @booking.professional.user : @booking.client
+    render layout: "video"
+  end
+
+  def livekit_token
+    unless @booking.confirmed?
+      render json: { error: "Booking not confirmed" }, status: :forbidden
+      return
+    end
+
+    unless current_user == @booking.client || current_user == @booking.professional.user
+      render json: { error: "Unauthorized" }, status: :unauthorized
+      return
+    end
+
+    identity = current_user == @booking.client ? "client_#{@booking.client.id}" : "pro_#{@booking.professional.id}"
+    name = current_user.name
+
+    token = LivekitTokenGenerator.generate(
+      room_name: @booking.meeting_room_id,
+      participant_name: name,
+      participant_identity: identity
+    )
+
+    render json: { token: token, url: ENV["LIVEKIT_URL"] }
   end
 
   private
@@ -60,12 +122,36 @@ class BookingsController < ApplicationController
         client: current_user
       )
       block.book!(@booking)
+
+      if professional.require_confirmation?
+        schedule_confirmation_deadline(@booking)
+        BookingMailer.booking_created(@booking).deliver_later
+      else
+        @booking.confirm!
+        @booking.update!(meeting_room_id: "booking_#{@booking.id}")
+        BookingMailer.booking_confirmed(@booking).deliver_later
+      end
     end
 
-    redirect_to @booking, notice: "Reserva creada exitosamente"
+    notice = professional.require_confirmation? ? "Reserva creada. Esperando confirmación del profesional." : "Reserva confirmada"
+    redirect_to @booking, notice: notice
   rescue ActiveRecord::RecordNotFound
     redirect_to professional_path(professional), alert: "Ese horario ya no está disponible"
   rescue ActiveRecord::RecordInvalid => e
     redirect_to professional_path(professional), alert: e.message
+  end
+
+  def schedule_confirmation_deadline(booking)
+    deadline = ConfirmationDeadlineCalculator.calculate(booking)
+    return unless deadline
+
+    booking.update!(confirmation_deadline_at: deadline)
+
+    ConfirmationDeadlineJob.set(wait_until: deadline).perform_later(booking.id)
+
+    reminder_at = deadline - 15.minutes
+    if reminder_at > Time.current
+      DeadlineReminderJob.set(wait_until: reminder_at).perform_later(booking.id)
+    end
   end
 end

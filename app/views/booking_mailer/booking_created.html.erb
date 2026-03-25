@@ -1,0 +1,33 @@
+<div class="header">
+  <h1>Nueva reserva</h1>
+</div>
+
+<p>Hola <%= @professional.full_name %>,</p>
+
+<p><strong><%= @client.name %></strong> reservó tu servicio:</p>
+
+<div class="detail">
+  <div class="detail-label">Servicio</div>
+  <div class="detail-value"><%= @service.title %></div>
+</div>
+
+<div class="detail">
+  <div class="detail-label">Fecha</div>
+  <div class="detail-value"><%= l(@booking.date, format: :long) %></div>
+</div>
+
+<div class="detail">
+  <div class="detail-label">Horario</div>
+  <div class="detail-value"><%= @booking.start_time.strftime("%H:%M") %> - <%= @booking.end_time.strftime("%H:%M") %></div>
+</div>
+
+<% if @professional.require_confirmation %>
+  <p style="margin-top: 24px;">
+    <a href="<%= pro_bookings_url %>" class="btn">Ver reservas pendientes</a>
+  </p>
+  <p style="font-size: 13px; color: #737373;">
+    <% if @booking.confirmation_deadline_at %>
+      Tenés hasta las <%= @booking.confirmation_deadline_at.strftime("%H:%M del %d/%m") %> para confirmar.
+    <% end %>
+  </p>
+<% end %>

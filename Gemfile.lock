@@ -87,6 +87,8 @@ GEM
     brakeman (8.0.4)
       racc
     builder (3.3.0)
+    childprocess (5.1.0)
+      logger (~> 1.5)
     concurrent-ruby (1.3.6)
     connection_pool (3.0.2)
     crass (1.0.6)
@@ -101,6 +103,9 @@ GEM
       responders
       warden (~> 1.2.3)
     dotenv (3.2.0)
+    dotenv-rails (3.2.0)
+      dotenv (= 3.2.0)
+      railties (>= 6.1)
     drb (2.2.3)
     ed25519 (1.4.0)
     erb (6.0.2)
@@ -180,6 +185,12 @@ GEM
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
     language_server-protocol (3.17.0.5)
+    launchy (3.1.1)
+      addressable (~> 2.8)
+      childprocess (~> 5.0)
+      logger (~> 1.6)
+    letter_opener (1.10.0)
+      launchy (>= 2.2, < 4)
     lint_roller (1.1.0)
     livekit-server-sdk (0.9.0)
       google-protobuf (~> 4.30, >= 4.30.2)
@@ -468,10 +479,12 @@ DEPENDENCIES
   brakeman
   debug
   devise
+  dotenv-rails
   faraday
   importmap-rails
   kamal
   kaminari
+  letter_opener
   livekit-server-sdk
   omniauth-google-oauth2
   propshaft

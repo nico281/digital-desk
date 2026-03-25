@@ -38,7 +38,7 @@
     <!-- Categories -->
     <% if professional.categories.any? %>
       <div class="flex flex-wrap gap-1.5 mt-3">
-        <% professional.categories.limit(3).each do |category| %>
+        <% professional.categories.first(3).each do |category| %>
           <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-md">
             <%= category.name %>
           </span>
@@ -48,7 +48,7 @@
   </div>
 
   <!-- Footer: Starting price -->
-  <% if (service = professional.services.active.order(:price).first) %>
+  <% if (service = professional.services.select(&:active?).min_by(&:price)) %>
     <div class="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
       <span class="text-sm text-gray-500">Desde</span>
       <span class="font-semibold text-gray-900">

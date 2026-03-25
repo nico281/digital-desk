@@ -13,6 +13,8 @@ Rails.application.routes.draw do
     member do
       post "confirm"
       post "cancel"
+      post "livekit_token"
+      get "room"
     end
     resource :review, only: [ :create ]
     collection do
@@ -24,10 +26,17 @@ Rails.application.routes.draw do
   namespace :pro do
     resource :setup, only: [ :show, :update ]
     resources :services
-    resources :availability_schedules
+    resources :availability_schedules do
+      collection { post :batch; delete :reset }
+    end
     patch "block_settings", to: "availability_schedules#update_settings"
     resources :availability_blocks, only: [ :create, :destroy ]
-    resources :bookings, only: [ :index ]
+    resources :bookings, only: [ :index ] do
+      member do
+        post :confirm
+        post :reject
+      end
+    end
   end
 
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }

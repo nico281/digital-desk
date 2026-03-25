@@ -23,12 +23,9 @@
   <body class="bg-gray-50 text-gray-900 antialiased h-screen flex flex-col overflow-hidden">
     <%= render "components/navbar" %>
 
-    <% if notice.present? %>
-      <div class="bg-green-50 border-b border-green-200 px-4 py-3 text-sm text-green-800 text-center"><%= notice %></div>
-    <% end %>
-    <% if alert.present? %>
-      <div class="bg-red-50 border-b border-red-200 px-4 py-3 text-sm text-red-800 text-center"><%= alert %></div>
-    <% end %>
+    <div id="flash">
+      <%= render "components/toast" %>
+    </div>
 
     <main class="flex-grow overflow-y-auto flex flex-col" style="view-transition-name: main-content;">
       <div class="flex-1">

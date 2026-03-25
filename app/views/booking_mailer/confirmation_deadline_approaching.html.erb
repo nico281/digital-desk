@@ -1,0 +1,36 @@
+<div class="header">
+  <h1>Confirmá tu reserva</h1>
+</div>
+
+<p>Hola <%= @professional.full_name %>,</p>
+
+<p>Tenés una reserva pendiente que necesita tu confirmación.</p>
+
+<div class="detail">
+  <div class="detail-label">Servicio</div>
+  <div class="detail-value"><%= @service.title %></div>
+</div>
+
+<div class="detail">
+  <div class="detail-label">Fecha</div>
+  <div class="detail-value"><%= l(@booking.date, format: :long) %></div>
+</div>
+
+<div class="detail">
+  <div class="detail-label">Horario</div>
+  <div class="detail-value"><%= @booking.start_time.strftime("%H:%M") %> - <%= @booking.end_time.strftime("%H:%M") %></div>
+</div>
+
+<% if @deadline %>
+  <p style="color: #dc2626; font-weight: 500;">
+    Límite para confirmar: <%= @deadline.strftime("%H:%M del %d/%m") %>
+  </p>
+<% end %>
+
+<p style="margin-top: 24px;">
+  <a href="<%= pro_bookings_url %>" class="btn">Ver reservas pendientes</a>
+</p>
+
+<p style="font-size: 13px; color: #737373;">
+  Si no confirmás a tiempo, la reserva se cancelará automáticamente.
+</p>
