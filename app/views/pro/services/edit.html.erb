@@ -1,12 +1,9 @@
 <% content_for :title, "Editar servicio" %>
 
-<div class="page-header">
-  <div class="page-header-content">
-    <h1 class="page-header-title">Editar servicio</h1>
-    <p class="page-header-subtitle"><%= @service.title %></p>
-  </div>
-</div>
-
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">Editar servicio</h1>
+    <p class="text-sm text-gray-500 mt-1"><%= @service.title %></p>
+  </div>
   <%= render "form", service: @service %>
 </div>

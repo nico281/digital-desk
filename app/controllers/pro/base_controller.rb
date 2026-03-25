@@ -1,5 +1,6 @@
 module Pro
   class BaseController < ApplicationController
+    layout "dashboard"
     before_action :require_authentication!
     before_action :set_professional
 

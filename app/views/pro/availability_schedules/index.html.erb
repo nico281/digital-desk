@@ -2,22 +2,19 @@
 
 <% day_names = %w[Domingo Lunes Martes Miércoles Jueves Viernes Sábado] %>
 
-<div class="page-header">
-  <div class="page-header-content flex items-center justify-between">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex items-center justify-between mb-6">
     <div>
-      <h1 class="page-header-title">Mi disponibilidad</h1>
-      <p class="page-header-subtitle">Configurá tus horarios semanales recurrentes</p>
+      <h1 class="text-2xl font-bold text-gray-900">Mi disponibilidad</h1>
+      <p class="text-sm text-gray-500 mt-1">Configurá tus horarios semanales recurrentes</p>
     </div>
-    <%= link_to new_pro_availability_schedule_path, class: "btn-primary bg-white text-gray-900 hover:bg-gray-100", data: { turbo_action: "advance" } do %>
+    <%= link_to new_pro_availability_schedule_path, class: "btn-primary", data: { turbo_action: "advance" } do %>
       <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
       </svg>
       Agregar horario
     <% end %>
   </div>
-</div>
-
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
   <!-- Configuración de bloques -->
   <div class="card p-6 mb-6">
     <div class="flex items-center justify-between mb-4">

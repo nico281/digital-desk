@@ -1,13 +1,11 @@
 <% content_for :title, "Perfil profesional" %>
 
-<div class="page-header">
-  <div class="page-header-content">
-    <h1 class="page-header-title"><%= @professional.persisted? ? "Editar perfil profesional" : "Crear perfil profesional" %></h1>
-    <p class="page-header-subtitle">Configurá tu perfil para empezar a ofrecer servicios</p>
-  </div>
-</div>
-
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900"><%= @professional.persisted? ? "Editar perfil profesional" : "Crear perfil profesional" %></h1>
+    <p class="text-sm text-gray-500 mt-1">Configurá tu perfil para empezar a ofrecer servicios</p>
+  </div>
+
   <%= form_with model: @professional, url: pro_setup_path, method: :patch, class: "space-y-6" do |f| %>
     <% if @professional.errors.any? %>
       <div class="bg-red-50 border border-red-200 rounded-xl p-4">
