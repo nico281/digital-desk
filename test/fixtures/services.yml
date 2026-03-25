@@ -1,0 +1,7 @@
+yoga_class:
+  professional: pro
+  title: "Clase de Yoga"
+  description: "Sesión de yoga para principiantes"
+  price: 5000
+  duration_minutes: 60
+  active: true

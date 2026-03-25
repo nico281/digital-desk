@@ -1,0 +1,6 @@
+good_review:
+  booking: completed_booking
+  client: client
+  professional: pro
+  rating: 5
+  comment: "Excelente clase, muy recomendable"

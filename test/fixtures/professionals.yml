@@ -1,0 +1,9 @@
+pro:
+  user: pro_user
+  headline: "Profesor de Yoga"
+  bio: "10 años de experiencia"
+  verified: true
+  rating_avg: 0.0
+  rating_count: 0
+  block_duration_minutes: 60
+  buffer_minutes: 0

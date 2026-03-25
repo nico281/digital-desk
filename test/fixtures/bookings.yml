@@ -1,0 +1,13 @@
+completed_booking:
+  client: client
+  professional: pro
+  service: yoga_class
+  availability_block: completed_block
+  status: 2
+
+pending_booking:
+  client: client
+  professional: pro
+  service: yoga_class
+  availability_block: pending_block
+  status: 0
