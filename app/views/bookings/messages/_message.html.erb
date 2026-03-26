@@ -2,9 +2,7 @@
 
 <div class="flex <%= is_mine ? 'justify-end' : 'justify-start' %> gap-2">
   <% unless is_mine %>
-    <div class="avatar avatar-primary w-10 h-10 text-sm flex-shrink-0">
-      <%= message.sender&.name&.first&.upcase || "?" %>
-    </div>
+    <%= user_avatar(message.sender, size: :sm, css: "flex-shrink-0") %>
   <% end %>
 
   <div class="max-w-[75%]">
@@ -40,8 +38,6 @@
   </div>
 
   <% if is_mine %>
-    <div class="avatar avatar-primary w-10 h-10 text-sm flex-shrink-0">
-      <%= message.sender&.name&.first&.upcase || "?" %>
-    </div>
+    <%= user_avatar(message.sender, size: :sm, css: "flex-shrink-0") %>
   <% end %>
 </div>

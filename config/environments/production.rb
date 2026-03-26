@@ -57,6 +57,9 @@ Rails.application.configure do
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST", "example.com") }
 
+  # Needed for Active Storage URLs in ActionCable broadcasts
+  Rails.application.routes.default_url_options = { host: ENV.fetch("APP_HOST", "example.com") }
+
   # Resend SMTP
   config.action_mailer.smtp_settings = {
     address: "smtp.resend.com",
