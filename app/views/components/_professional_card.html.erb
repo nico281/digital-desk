@@ -1,4 +1,4 @@
-<%= link_to professional_path(professional), class: "group block bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all duration-300", data: { turbo_action: "advance" } do %>
+<%= link_to professional_path(professional), class: "group block bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-gray-300 hover:-translate-y-1 transition-all duration-300 ease-out", data: { turbo_action: "advance" }.merge(defined?(reveal_delay) && reveal_delay ? { reveal_target: "item", reveal_delay: reveal_delay } : {}) do %>
   <!-- Header: Avatar + Info -->
   <div class="p-5">
     <div class="flex items-start gap-4">

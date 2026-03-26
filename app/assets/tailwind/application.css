@@ -27,6 +27,48 @@
   }
 }
 
+/* Reveal animations
+   Uses `transform` (composite) so Tailwind's `translate` (individual prop) hover still works.
+   On Turbo navigations, controller shows items immediately — view transition IS the animation. */
+[data-reveal-target="item"] {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+[data-reveal-target="item"][data-reveal-type="fade"] {
+  transform: none;
+}
+
+[data-reveal-target="item"][data-reveal-type="slide-left"] {
+  transform: translateX(-30px);
+}
+
+[data-reveal-target="item"][data-reveal-type="slide-right"] {
+  transform: translateX(30px);
+}
+
+[data-reveal-target="item"][data-reveal-type="scale"] {
+  transform: scale(0.92);
+}
+
+[data-reveal-target].reveal-animating {
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 1;
+  transform: none;
+}
+
+[data-reveal-target].reveal-done {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal-target].reveal-animating {
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* Toasts */
 #flash {
   position: fixed;
@@ -84,11 +126,11 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium transition-all bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg;
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium transition-all duration-300 ease-out bg-gray-900 text-white hover:bg-gray-800 hover:shadow-xl hover:-translate-y-0.5;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium transition-all bg-white text-gray-700 border border-gray-200 hover:bg-gray-50;
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium transition-all duration-300 ease-out bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:shadow-lg hover:-translate-y-0.5;
   }
 
   /* Cards */
@@ -97,7 +139,7 @@
   }
 
   .card-hoverable {
-    @apply hover:shadow-lg hover:border-gray-300 transition-all duration-300;
+    @apply hover:shadow-xl hover:border-gray-300 hover:-translate-y-1 transition-all duration-300 ease-out;
   }
 
   /* Badges */

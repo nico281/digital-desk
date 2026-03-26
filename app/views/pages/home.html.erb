@@ -1,7 +1,7 @@
 <% content_for :title, "D-Desk — Profesionales al instante" %>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+<section class="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900" data-controller="reveal">
   <!-- Decorative elements -->
   <div class="absolute top-20 right-10 w-72 h-72 bg-white/5 rounded-full blur-3xl"></div>
   <div class="absolute bottom-10 left-10 w-96 h-96 bg-gray-600/10 rounded-full blur-3xl"></div>
@@ -9,22 +9,22 @@
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
     <div class="max-w-3xl">
       <!-- Badge -->
-      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white text-sm font-medium mb-8 border border-white/20">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white text-sm font-medium mb-8 border border-white/20" data-reveal-target="item" data-reveal-type="fade">
         <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
         Plataforma activa
       </div>
 
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6" data-reveal-target="item" data-reveal-delay="100">
         Conecta con expertos<br>
         <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-gray-400">en videollamada</span>
       </h1>
 
-      <p class="text-lg sm:text-xl text-gray-300 mb-10 max-w-xl leading-relaxed">
+      <p class="text-lg sm:text-xl text-gray-300 mb-10 max-w-xl leading-relaxed" data-reveal-target="item" data-reveal-delay="200">
         Clases, consultas y mentoring 1 a 1. Encontrá al profesional perfecto y reservá en segundos.
       </p>
 
       <!-- Search Box -->
-      <div class="bg-white/10 backdrop-blur-md rounded-2xl p-2 mb-6">
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl p-2 mb-6" data-reveal-target="item" data-reveal-delay="350">
         <%= form_with url: search_path, method: :get, class: "flex flex-col sm:flex-row gap-2", data: { turbo_action: "advance", controller: "search-box" } do %>
           <div class="flex-1 relative">
             <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,35 +38,35 @@
               data-action="keydown->search-box#submit"
             >
           </div>
-          <button type="submit" class="px-8 py-4 bg-white text-gray-900 font-semibold rounded-xl hover:bg-gray-100 transition-all hover:shadow-lg whitespace-nowrap">
+          <button type="submit" class="px-8 py-4 bg-white text-gray-900 font-semibold rounded-xl hover:bg-gray-100 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 ease-out whitespace-nowrap">
             Buscar
           </button>
         <% end %>
       </div>
 
       <!-- Popular searches -->
-      <div class="flex flex-wrap gap-2 text-sm text-gray-300">
+      <div class="flex flex-wrap gap-2 text-sm text-gray-300" data-reveal-target="item" data-reveal-type="fade" data-reveal-delay="450">
         <span class="text-white/60">Popular:</span>
-        <%= link_to "Matemática", search_path(q: "matematica"), class: "px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors", data: { turbo_action: "advance" } %>
-        <%= link_to "Psicología", search_path(q: "psicologia"), class: "px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors", data: { turbo_action: "advance" } %>
-        <%= link_to "Programación", search_path(q: "programacion"), class: "px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors", data: { turbo_action: "advance" } %>
+        <%= link_to "Matemática", search_path(q: "matematica"), class: "px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 hover:scale-105 transition-all duration-200 ease-out", data: { turbo_action: "advance" } %>
+        <%= link_to "Psicología", search_path(q: "psicologia"), class: "px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 hover:scale-105 transition-all duration-200 ease-out", data: { turbo_action: "advance" } %>
+        <%= link_to "Programación", search_path(q: "programacion"), class: "px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 hover:scale-105 transition-all duration-200 ease-out", data: { turbo_action: "advance" } %>
       </div>
     </div>
   </div>
 
   <!-- Stats -->
-  <div class="relative border-t border-white/10 bg-white/5 backdrop-blur-sm">
+  <div class="relative border-t border-white/10 bg-white/5 backdrop-blur-sm" data-controller="reveal">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="grid grid-cols-3 gap-8 text-center">
-        <div>
+        <div data-reveal-target="item" data-reveal-type="scale" data-reveal-delay="100">
           <p class="text-2xl sm:text-3xl font-bold text-white">+50</p>
           <p class="text-gray-400 text-sm">Categorías</p>
         </div>
-        <div>
+        <div data-reveal-target="item" data-reveal-type="scale" data-reveal-delay="200">
           <p class="text-2xl sm:text-3xl font-bold text-white">100%</p>
           <p class="text-gray-400 text-sm">Online</p>
         </div>
-        <div>
+        <div data-reveal-target="item" data-reveal-type="scale" data-reveal-delay="300">
           <p class="text-2xl sm:text-3xl font-bold text-white">24/7</p>
           <p class="text-gray-400 text-sm">Disponibilidad</p>
         </div>
@@ -76,33 +76,33 @@
 </section>
 
 <!-- Categories Section -->
-<section class="py-20 bg-white">
+<section class="py-20 bg-white" data-controller="reveal">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between mb-10">
+    <div class="flex items-center justify-between mb-10" data-reveal-target="item">
       <div>
         <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Explora por categoría</h2>
         <p class="text-gray-500 mt-2">Encontrá exactamente lo que necesitás</p>
       </div>
-      <%= link_to search_path, class: "text-gray-700 font-medium hover:text-gray-900 flex items-center gap-1 group", data: { turbo_action: "advance" } do %>
+      <%= link_to search_path, class: "text-gray-700 font-medium hover:text-gray-900 flex items-center gap-1 group transition-colors duration-300 ease-out", data: { turbo_action: "advance" } do %>
         Ver todas
-        <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300 ease-out" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
         </svg>
       <% end %>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <% @featured_categories.each do |category| %>
-        <%= render "components/category_card", category: %>
+      <% @featured_categories.each_with_index do |category, i| %>
+        <%= render "components/category_card", category:, reveal_delay: i * 80 %>
       <% end %>
     </div>
   </div>
 </section>
 
 <!-- Featured Professionals -->
-<section class="py-20 bg-gradient-to-b from-gray-50 to-white">
+<section class="py-20 bg-gradient-to-b from-gray-50 to-white" data-controller="reveal">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-12">
+    <div class="text-center mb-12" data-reveal-target="item">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-sm font-medium mb-4">
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
@@ -114,15 +114,15 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <% @featured_professionals.each do |professional| %>
-        <%= render "components/professional_card", professional: %>
+      <% @featured_professionals.each_with_index do |professional, i| %>
+        <%= render "components/professional_card", professional:, reveal_delay: i * 100 %>
       <% end %>
     </div>
 
     <div class="mt-12 text-center">
-      <%= link_to search_path, class: "inline-flex items-center gap-2 px-8 py-4 bg-gray-900 text-white font-medium rounded-xl hover:bg-gray-800 transition-all hover:shadow-lg", data: { turbo_action: "advance" } do %>
+      <%= link_to search_path, class: "group inline-flex items-center gap-2 px-8 py-4 bg-gray-900 text-white font-medium rounded-xl hover:bg-gray-800 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 ease-out", data: { turbo_action: "advance" } do %>
         Ver todos los profesionales
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300 ease-out" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
         </svg>
       <% end %>
@@ -131,16 +131,16 @@
 </section>
 
 <!-- How it works -->
-<section class="py-24 bg-white">
+<section class="py-24 bg-white" data-controller="reveal">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16">
+    <div class="text-center mb-16" data-reveal-target="item">
       <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Cómo funciona</h2>
       <p class="text-gray-500 mt-3 text-lg">Tres simples pasos</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-8">
       <!-- Step 1 -->
-      <div class="relative text-center">
+      <div class="relative text-center" data-reveal-target="item" data-reveal-delay="100">
         <div class="absolute top-8 left-1/2 -translate-x-1/2 w-full h-0.5 bg-gradient-to-r from-gray-200 to-transparent hidden md:block"></div>
         <div class="relative">
           <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-gray-200">1</div>
@@ -150,7 +150,7 @@
       </div>
 
       <!-- Step 2 -->
-      <div class="relative text-center">
+      <div class="relative text-center" data-reveal-target="item" data-reveal-delay="250">
         <div class="absolute top-8 left-1/2 -translate-x-1/2 w-full h-0.5 bg-gradient-to-r from-gray-200 to-transparent hidden md:block"></div>
         <div class="relative">
           <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-gray-200">2</div>
@@ -160,7 +160,7 @@
       </div>
 
       <!-- Step 3 -->
-      <div class="text-center">
+      <div class="text-center" data-reveal-target="item" data-reveal-delay="400">
         <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-gray-200">3</div>
         <h3 class="text-lg font-semibold text-gray-900 mb-2">Conectá</h3>
         <p class="text-gray-500 leading-relaxed">Unite a la videollamada en el momento programado</p>
@@ -170,10 +170,10 @@
 </section>
 
 <!-- Become Professional CTA -->
-<section class="py-24 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden">
+<section class="py-24 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden" data-controller="reveal">
   <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMiI+PHBhdGggZD0iTTM2IDM0djItaDJ2LTJoMnYyaDJ2LTJoMnYyaDJ2LTJoMnYyaDJ2LTNoMnYyaDJ2LTNoMnYtMmgydi0yaDJ2LTJoMnYtMmgydi0yaDJ2LTJoMnYtMmgydi0yaDJ2LTJoMnYtMmgydi0yaDJ2LTJoMnYtMmgydi0waDJ2LTJoMnYtMmgyek0zNiAzNHYyaC0ydjJoLTJ2LTJoLTJ2MmgtMnYtMmgtMnYyaC0ydi0yaC0ydi0waC0ydi0waC0ydi0waC0ydi0waC0ydi0waC0ydi0waC0ydi0waC0ydi0waC0ydi0waC0ydi0waC0yek0wIDBoNjB2NjBIMHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30"></div>
 
-  <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+  <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-reveal-target="item">
     <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-gray-300 text-sm font-medium mb-6">
       <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
         <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
@@ -187,8 +187,8 @@
       Compartí tus conocimientos con alumnos de todo el mundo. Fijá tus precios, manejá tu agenda y recibí pagos de forma segura.
     </p>
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <%= link_to "Comenzar ahora", new_user_registration_path, class: "px-8 py-4 bg-white text-gray-900 font-semibold rounded-xl hover:bg-gray-100 transition-all hover:shadow-lg", data: { turbo_action: "advance" } %>
-      <%= link_to search_path, class: "px-8 py-4 bg-white/10 text-white font-semibold rounded-xl hover:bg-white/20 transition-all border border-white/10", data: { turbo_action: "advance" } do %>
+      <%= link_to "Comenzar ahora", new_user_registration_path, class: "px-8 py-4 bg-white text-gray-900 font-semibold rounded-xl hover:bg-gray-100 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 ease-out", data: { turbo_action: "advance" } %>
+      <%= link_to search_path, class: "px-8 py-4 bg-white/10 text-white font-semibold rounded-xl hover:bg-white/20 hover:-translate-y-0.5 transition-all duration-300 ease-out border border-white/10", data: { turbo_action: "advance" } do %>
         Explorar como cliente
       <% end %>
     </div>
