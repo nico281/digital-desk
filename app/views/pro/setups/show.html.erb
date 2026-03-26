@@ -1,88 +1,15 @@
-<% content_for :title, "Perfil profesional" %>
+<% content_for :title, @wizard ? "Configurar perfil profesional" : "Perfil profesional" %>
 
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-900"><%= @professional.persisted? ? "Editar perfil profesional" : "Crear perfil profesional" %></h1>
-    <p class="text-sm text-gray-500 mt-1">Configurá tu perfil para empezar a ofrecer servicios</p>
-  </div>
+  <% if @wizard %>
+    <%= render "progress", step: @step %>
+  <% end %>
 
-  <%= form_with model: @professional, url: pro_setup_path, method: :patch, class: "space-y-6" do |f| %>
-    <% if @professional.errors.any? %>
-      <div class="bg-red-50 border border-red-200 rounded-xl p-4">
-        <ul class="text-sm text-red-700 space-y-1">
-          <% @professional.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
-
-    <div class="card p-6 space-y-6">
-      <h2 class="text-lg font-semibold text-gray-900">Información básica</h2>
-
-      <div>
-        <label for="professional_headline" class="block text-sm font-medium text-gray-700 mb-1">Titular</label>
-        <%= f.text_field :headline, placeholder: "Ej: Profesor de Matemática con 10 años de experiencia", class: "w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-gray-500 focus:ring-gray-500" %>
-        <p class="text-xs text-gray-400 mt-1">Máximo 100 caracteres. Aparece debajo de tu nombre.</p>
-      </div>
-
-      <div>
-        <label for="professional_bio" class="block text-sm font-medium text-gray-700 mb-1">Biografía</label>
-        <%= f.text_area :bio, rows: 5, placeholder: "Contá sobre tu experiencia, formación y qué pueden esperar tus clientes...", class: "w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-gray-500 focus:ring-gray-500" %>
-      </div>
-
-      <div>
-        <label for="professional_currency" class="block text-sm font-medium text-gray-700 mb-1">Moneda</label>
-        <%= f.select :currency,
-          Professional::CURRENCIES.map { |code, info| ["#{info[:unit]} — #{info[:name]} (#{code})", code] },
-          {},
-          class: "w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-gray-500 focus:ring-gray-500" %>
-        <p class="text-xs text-gray-400 mt-1">Moneda en la que cobrás tus servicios</p>
-      </div>
-    </div>
-
-    <div class="card p-6">
-      <h2 class="text-lg font-semibold text-gray-900 mb-4">Especialidades</h2>
-      <p class="text-sm text-gray-500 mb-4">Seleccioná las categorías en las que ofrecés servicios</p>
-
-      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <% @categories.each do |category| %>
-          <label class="flex items-center gap-2 p-3 rounded-xl border border-gray-200 hover:bg-gray-50 cursor-pointer has-[:checked]:bg-gray-900 has-[:checked]:text-white has-[:checked]:border-gray-900 transition-colors">
-            <input type="checkbox" name="professional[category_ids][]" value="<%= category.id %>"
-                   <%= "checked" if @professional.category_ids.include?(category.id) %>
-                   class="rounded border-gray-300 text-gray-900 focus:ring-gray-500">
-            <span class="text-sm font-medium"><%= category.name %></span>
-          </label>
-        <% end %>
-      </div>
-    </div>
-
-    <!-- Video introductorio (opcional) -->
-    <div class="card p-6 space-y-4">
-      <div>
-        <h2 class="text-lg font-semibold text-gray-900">Video introductorio</h2>
-        <p class="text-sm text-gray-500 mt-1">Opcional. Un video corto para que los clientes te conozcan antes de reservar.</p>
-      </div>
-
-      <% if @professional.intro_video.attached? %>
-        <div class="rounded-xl overflow-hidden bg-black">
-          <%= video_tag url_for(@professional.intro_video), controls: true, class: "w-full max-h-64" %>
-        </div>
-        <label class="flex items-center gap-2 text-sm text-gray-500">
-          <input type="checkbox" name="remove_intro_video" value="1" class="rounded border-gray-300">
-          Eliminar video actual
-        </label>
-      <% end %>
-
-      <div>
-        <input type="file" name="professional_intro_video" accept="video/mp4,video/webm,video/quicktime"
-          class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-900 file:text-white hover:file:bg-gray-800 file:cursor-pointer">
-        <p class="text-xs text-gray-400 mt-2">MP4, WebM o MOV. Max 50MB, ~60 segundos recomendado.</p>
-      </div>
-    </div>
-
-    <div class="flex justify-end">
-      <%= f.submit @professional.persisted? ? "Guardar cambios" : "Crear perfil profesional", class: "btn btn-primary py-3 px-8 cursor-pointer" %>
-    </div>
+  <% if @step == 1 %>
+    <%= render "step_profile" %>
+  <% elsif @step == 2 %>
+    <%= render "step_service" %>
+  <% elsif @step == 3 %>
+    <%= render "step_availability" %>
   <% end %>
 </div>

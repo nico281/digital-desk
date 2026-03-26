@@ -7,3 +7,4 @@ pro:
   rating_count: 0
   block_duration_minutes: 60
   buffer_minutes: 0
+  setup_completed_at: <%= 1.week.ago.to_fs(:db) %>

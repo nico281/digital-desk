@@ -1,6 +1,6 @@
 module Pro
   class AvailabilitySchedulesController < BaseController
-    before_action :require_professional!
+    before_action :require_setup_complete!
     before_action :set_schedule, only: [ :edit, :update, :destroy ]
 
     DAY_NAMES = %w[Domingo Lunes Martes Miércoles Jueves Viernes Sábado].freeze

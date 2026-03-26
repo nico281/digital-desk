@@ -1,6 +1,6 @@
 module Pro
   class ReviewsController < BaseController
-    before_action :require_professional!
+    before_action :require_setup_complete!
 
     def index
       @reviews = @professional.reviews

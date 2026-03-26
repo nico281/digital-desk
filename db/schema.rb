@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_26_030729) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_26_174631) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -164,6 +164,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_26_030729) do
     t.integer "block_duration_minutes", default: 60, null: false
     t.integer "buffer_minutes", default: 0, null: false
     t.string "currency", default: "UYU", null: false
+    t.datetime "setup_completed_at"
     t.index ["user_id"], name: "index_professionals_on_user_id", unique: true
   end
 

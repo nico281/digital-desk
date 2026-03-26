@@ -28,6 +28,22 @@ class Professional < ApplicationRecord
   scope :verified, -> { where(verified: true) }
   scope :by_rating, -> { order(rating_avg: :desc) }
 
+  def setup_complete?
+    setup_completed_at.present?
+  end
+
+  # Returns the next incomplete wizard step (1, 2 or 3), or nil if all done.
+  def next_setup_step
+    return 1 unless headline.present?
+    return 2 unless services.any?
+    return 3 unless availability_schedules.any?
+    nil
+  end
+
+  def mark_setup_complete!
+    update_column(:setup_completed_at, Time.current) unless setup_complete?
+  end
+
   def full_name
     user.name
   end

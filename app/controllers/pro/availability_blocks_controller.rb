@@ -1,6 +1,6 @@
 module Pro
   class AvailabilityBlocksController < BaseController
-    before_action :require_professional!
+    before_action :require_setup_complete!
 
     def create
       @block = @professional.availability_blocks.build(block_params)

@@ -1,6 +1,6 @@
 module Pro
   class BookingsController < BaseController
-    before_action :require_professional!
+    before_action :require_setup_complete!
     before_action :set_booking, only: [ :confirm, :reject ]
 
     def index
