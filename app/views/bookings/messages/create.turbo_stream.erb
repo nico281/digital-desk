@@ -1,0 +1,5 @@
+<%= turbo_stream.replace "chat_form_booking_#{@booking.id}" do %>
+  <div id="chat_form_booking_<%= @booking.id %>" class="border-t border-gray-200 p-3">
+    <%= render "bookings/messages/form", booking: @booking %>
+  </div>
+<% end %>

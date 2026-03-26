@@ -16,7 +16,9 @@ Rails.application.routes.draw do
       post "cancel"
       post "livekit_token"
       get "room"
+      post "mark_read", controller: "bookings/messages"
     end
+    resources :messages, only: [ :create ], controller: "bookings/messages"
     resource :review, only: [ :create ]
     collection do
       get "complete_pending"

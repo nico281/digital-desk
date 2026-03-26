@@ -12,6 +12,11 @@ module ApplicationHelper
     end
   end
 
+  def format_price(amount, professional)
+    currency = Professional::CURRENCIES[professional.currency] || Professional::CURRENCIES["UYU"]
+    number_to_currency(amount, unit: "#{currency[:unit]} ", precision: 0)
+  end
+
   def user_avatar(user, size: :md, css: "")
     sizes = { sm: "w-10 h-10 text-sm", md: "w-12 h-12 text-base", lg: "w-16 h-16 text-xl", xl: "w-24 h-24 text-3xl" }
     img_sizes = { sm: 40, md: 48, lg: 64, xl: 96 }

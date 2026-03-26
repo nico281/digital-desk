@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_25_230939) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_26_030729) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -107,6 +107,28 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_25_230939) do
     t.index ["slug"], name: "index_categories_on_slug", unique: true
   end
 
+  create_table "chat_read_markers", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "booking_id", null: false
+    t.datetime "last_read_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["booking_id"], name: "index_chat_read_markers_on_booking_id"
+    t.index ["user_id", "booking_id"], name: "index_chat_read_markers_on_user_id_and_booking_id", unique: true
+    t.index ["user_id"], name: "index_chat_read_markers_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.integer "booking_id", null: false
+    t.integer "sender_id", null: false
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["booking_id", "created_at"], name: "index_messages_on_booking_id_and_created_at"
+    t.index ["booking_id"], name: "index_messages_on_booking_id"
+    t.index ["sender_id"], name: "index_messages_on_sender_id"
+  end
+
   create_table "payments", force: :cascade do |t|
     t.integer "booking_id", null: false
     t.decimal "amount", precision: 10, scale: 2, null: false
@@ -141,6 +163,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_25_230939) do
     t.datetime "updated_at", null: false
     t.integer "block_duration_minutes", default: 60, null: false
     t.integer "buffer_minutes", default: 0, null: false
+    t.string "currency", default: "UYU", null: false
     t.index ["user_id"], name: "index_professionals_on_user_id", unique: true
   end
 
@@ -204,6 +227,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_25_230939) do
   add_foreign_key "bookings", "users", column: "client_id"
   add_foreign_key "cancellation_policies", "professionals"
   add_foreign_key "categories", "categories", column: "parent_id"
+  add_foreign_key "chat_read_markers", "bookings"
+  add_foreign_key "chat_read_markers", "users"
+  add_foreign_key "messages", "bookings"
+  add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "payments", "bookings"
   add_foreign_key "professional_categories", "categories"
   add_foreign_key "professional_categories", "professionals"

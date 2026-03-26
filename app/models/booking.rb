@@ -7,6 +7,8 @@ class Booking < ApplicationRecord
   belongs_to :availability_block
   belongs_to :payment, optional: true
   has_one :review
+  has_many :messages, dependent: :destroy
+  has_many :chat_read_markers, dependent: :destroy
 
   validates :client, presence: true
   validates :professional, presence: true
@@ -44,6 +46,19 @@ class Booking < ApplicationRecord
 
   def date
     availability_block&.date
+  end
+
+  def unread_messages_count_for(user)
+    marker = chat_read_markers.find_by(user: user)
+    if marker
+      messages.where("created_at > ?", marker.last_read_at).count
+    else
+      messages.count
+    end
+  end
+
+  def chat_participant?(user)
+    client_id == user.id || professional.user_id == user.id
   end
 
   private

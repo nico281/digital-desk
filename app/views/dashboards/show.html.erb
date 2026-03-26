@@ -93,9 +93,15 @@
                 </p>
               </div>
             </div>
-            <span class="badge <%= booking.confirmed? ? 'badge-green' : 'badge-yellow' %>">
-              <%= booking.confirmed? ? 'Confirmada' : 'Pendiente' %>
-            </span>
+            <div class="flex items-center gap-2">
+              <% unread = booking.unread_messages_count_for(@user) %>
+              <% if unread > 0 %>
+                <span class="w-5 h-5 rounded-full bg-violet-600 text-white text-[10px] flex items-center justify-center font-medium"><%= unread > 9 ? "9+" : unread %></span>
+              <% end %>
+              <span class="badge <%= booking.confirmed? ? 'badge-green' : 'badge-yellow' %>">
+                <%= booking.confirmed? ? 'Confirmada' : 'Pendiente' %>
+              </span>
+            </div>
           <% end %>
         <% end %>
       </div>

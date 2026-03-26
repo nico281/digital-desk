@@ -52,7 +52,7 @@
     <div class="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
       <span class="text-sm text-gray-500">Desde</span>
       <span class="font-semibold text-gray-900">
-        <%= number_to_currency(service.price, unit: "$", precision: 0) %>
+        <%= format_price(service.price, professional) %>
       </span>
     </div>
   <% end %>

@@ -32,7 +32,7 @@ module Pro
     private
 
     def professional_params
-      params.require(:professional).permit(:headline, :bio)
+      params.require(:professional).permit(:headline, :bio, :currency)
     end
   end
 end

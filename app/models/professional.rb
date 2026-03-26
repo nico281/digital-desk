@@ -10,6 +10,15 @@ class Professional < ApplicationRecord
   has_many :reviews, dependent: :destroy
   has_one_attached :intro_video
 
+  CURRENCIES = {
+    "UYU" => { unit: "$U", name: "Peso uruguayo" },
+    "ARS" => { unit: "$", name: "Peso argentino" },
+    "USD" => { unit: "US$", name: "Dólar" },
+    "BRL" => { unit: "R$", name: "Real" },
+    "EUR" => { unit: "€", name: "Euro" }
+  }.freeze
+
+  validates :currency, inclusion: { in: CURRENCIES.keys }
   validates :headline, length: { maximum: 100 }
   validates :rating_avg, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 5 }
   validates :rating_count, numericality: { greater_than_or_equal_to: 0 }

@@ -4,7 +4,8 @@ import { Room, RoomEvent, Track } from "livekit-client"
 export default class extends Controller {
   static targets = [
     "localVideo", "remoteVideo", "status",
-    "remotePlaceholder", "placeholderText", "micBtn", "camBtn", "leaveBtn"
+    "remotePlaceholder", "placeholderText", "micBtn", "camBtn", "leaveBtn",
+    "chatPanel", "chatBtn"
   ]
   static values = { tokenUrl: String, bookingUrl: String }
 
@@ -225,6 +226,16 @@ export default class extends Controller {
         this.setButtonMuted(btn, false)
         btn.title = "Apagar cámara"
       }
+    }
+  }
+
+  toggleChat() {
+    if (!this.hasChatPanelTarget) return
+    const panel = this.chatPanelTarget
+    panel.classList.toggle("hidden")
+    if (this.hasChatBtnTarget) {
+      this.chatBtnTarget.classList.toggle("bg-violet-600")
+      this.chatBtnTarget.classList.toggle("bg-white/10")
     }
   }
 

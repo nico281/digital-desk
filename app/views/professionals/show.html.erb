@@ -102,7 +102,7 @@
 
                 <div class="text-right">
                   <p class="text-2xl font-bold text-gray-900">
-                    <%= number_to_currency(service.price, unit: "$", precision: 0) %>
+                    <%= format_price(service.price, @professional) %>
                   </p>
                   <%= link_to "Reservar",
                       slots_professional_path(@professional, service_id: service.id, date: Date.tomorrow),
