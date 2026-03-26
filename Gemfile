@@ -54,7 +54,7 @@ gem "image_processing", "~> 1.2"
 gem "dotenv-rails", groups: [ :development, :test ]
 
 group :development, :test do
-  gem "minitest", "~> 5.25"
+  gem "minitest", "~> 6.0"
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
