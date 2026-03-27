@@ -6,9 +6,10 @@ class Booking < ApplicationRecord
   belongs_to :service
   belongs_to :availability_block
   belongs_to :payment, optional: true
+  belongs_to :conversation, optional: true
   has_one :review
-  has_many :messages, dependent: :destroy
-  has_many :chat_read_markers, dependent: :destroy
+  has_many :messages
+  has_many :chat_read_markers
 
   validates :client, presence: true
   validates :professional, presence: true
@@ -49,19 +50,20 @@ class Booking < ApplicationRecord
   end
 
   def unread_messages_count_for(user)
-    marker = chat_read_markers.find_by(user: user)
-    if marker
-      messages.where("created_at > ?", marker.last_read_at).count
-    else
-      messages.count
-    end
+    conversation&.unread_messages_count_for(user) || 0
   end
 
   def chat_participant?(user)
-    client_id == user.id || professional.user_id == user.id
+    conversation&.participant?(user) || client_id == user.id || professional.user_id == user.id
   end
 
+  before_create :ensure_conversation
+
   private
+
+  def ensure_conversation
+    self.conversation ||= Conversation.find_or_start(client: client, professional: professional)
+  end
 
   def client_is_not_professional
     return if client.nil? || professional.nil?

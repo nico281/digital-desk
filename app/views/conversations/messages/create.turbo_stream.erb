@@ -1,0 +1,5 @@
+<%= turbo_stream.replace "chat_form_conversation_#{@conversation.id}" do %>
+  <div id="chat_form_conversation_<%= @conversation.id %>" class="border-t border-gray-200 p-3">
+    <%= render "shared/chat/form", url: conversation_messages_path(@conversation) %>
+  </div>
+<% end %>

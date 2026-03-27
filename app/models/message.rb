@@ -1,5 +1,6 @@
 class Message < ApplicationRecord
-  belongs_to :booking
+  belongs_to :conversation
+  belongs_to :booking, optional: true
   belongs_to :sender, class_name: "User"
   has_many_attached :files
 
@@ -14,17 +15,17 @@ class Message < ApplicationRecord
   after_create_commit :broadcast_message
 
   def other_participant
-    booking.client_id == sender_id ? booking.professional.user : booking.client
+    conversation.client_id == sender_id ? conversation.professional.user : conversation.client
   end
 
   private
 
   def broadcast_message
-    [ booking.client, booking.professional.user ].each do |user|
+    [ conversation.client, conversation.professional.user ].each do |user|
       broadcast_append_to(
-        "booking_#{booking_id}_user_#{user.id}_messages",
-        target: "messages_booking_#{booking_id}",
-        partial: "bookings/messages/message",
+        "conversation_#{conversation_id}_user_#{user.id}_messages",
+        target: "messages_conversation_#{conversation_id}",
+        partial: "shared/chat/message",
         locals: { message: self, current_user: user }
       )
     end

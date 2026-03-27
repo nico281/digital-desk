@@ -3,6 +3,7 @@ class User < ApplicationRecord
   has_many :bookings_as_client, class_name: "Booking", foreign_key: :client_id, dependent: :destroy
   has_many :reviews_as_client, class_name: "Review", foreign_key: :client_id, dependent: :destroy
   has_many :sent_messages, class_name: "Message", foreign_key: :sender_id, dependent: :destroy
+  has_many :conversations_as_client, class_name: "Conversation", foreign_key: :client_id, dependent: :destroy
   has_one_attached :avatar
 
   devise :database_authenticatable, :registerable,

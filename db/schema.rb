@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_26_174631) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_27_031107) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -79,9 +79,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_26_174631) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "confirmation_deadline_at"
+    t.integer "conversation_id"
     t.index ["availability_block_id"], name: "index_bookings_on_availability_block_id"
     t.index ["client_id"], name: "index_bookings_on_client_id"
     t.index ["confirmation_deadline_at"], name: "index_bookings_on_confirmation_deadline_at"
+    t.index ["conversation_id"], name: "index_bookings_on_conversation_id"
     t.index ["payment_id"], name: "index_bookings_on_payment_id"
     t.index ["professional_id"], name: "index_bookings_on_professional_id"
     t.index ["service_id"], name: "index_bookings_on_service_id"
@@ -109,23 +111,37 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_26_174631) do
 
   create_table "chat_read_markers", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.integer "booking_id", null: false
+    t.integer "booking_id"
     t.datetime "last_read_at", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "conversation_id", null: false
     t.index ["booking_id"], name: "index_chat_read_markers_on_booking_id"
-    t.index ["user_id", "booking_id"], name: "index_chat_read_markers_on_user_id_and_booking_id", unique: true
+    t.index ["conversation_id"], name: "index_chat_read_markers_on_conversation_id"
+    t.index ["user_id", "conversation_id"], name: "index_chat_read_markers_on_user_id_and_conversation_id", unique: true
     t.index ["user_id"], name: "index_chat_read_markers_on_user_id"
   end
 
+  create_table "conversations", force: :cascade do |t|
+    t.integer "client_id", null: false
+    t.integer "professional_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id", "professional_id"], name: "index_conversations_on_client_id_and_professional_id", unique: true
+    t.index ["client_id"], name: "index_conversations_on_client_id"
+    t.index ["professional_id"], name: "index_conversations_on_professional_id"
+  end
+
   create_table "messages", force: :cascade do |t|
-    t.integer "booking_id", null: false
+    t.integer "booking_id"
     t.integer "sender_id", null: false
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["booking_id", "created_at"], name: "index_messages_on_booking_id_and_created_at"
+    t.integer "conversation_id", null: false
     t.index ["booking_id"], name: "index_messages_on_booking_id"
+    t.index ["conversation_id", "created_at"], name: "index_messages_on_conversation_id_and_created_at"
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
     t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
@@ -222,6 +238,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_26_174631) do
   add_foreign_key "availability_blocks", "professionals"
   add_foreign_key "availability_schedules", "professionals"
   add_foreign_key "bookings", "availability_blocks"
+  add_foreign_key "bookings", "conversations"
   add_foreign_key "bookings", "payments"
   add_foreign_key "bookings", "professionals"
   add_foreign_key "bookings", "services"
@@ -229,8 +246,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_26_174631) do
   add_foreign_key "cancellation_policies", "professionals"
   add_foreign_key "categories", "categories", column: "parent_id"
   add_foreign_key "chat_read_markers", "bookings"
+  add_foreign_key "chat_read_markers", "conversations"
   add_foreign_key "chat_read_markers", "users"
+  add_foreign_key "conversations", "professionals"
+  add_foreign_key "conversations", "users", column: "client_id"
   add_foreign_key "messages", "bookings"
+  add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "payments", "bookings"
   add_foreign_key "professional_categories", "categories"

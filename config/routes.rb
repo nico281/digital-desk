@@ -4,12 +4,21 @@ Rails.application.routes.draw do
 
   get "/buscar", to: "search#index", as: :search
   resources :professionals, only: [ :show ] do
-    get :slots, on: :member
+    member do
+      get :slots
+      post :start_conversation
+    end
   end
 
   # Privadas (requieren auth)
   resource :dashboard, only: [ :show ]
   resource :account, only: [ :show, :update ]
+
+  resources :conversations, only: [ :index, :show ] do
+    resources :messages, only: [ :create ], controller: "conversations/messages"
+    post "mark_read", on: :member, controller: "conversations/messages"
+  end
+
   resources :bookings, only: [ :show, :create ] do
     member do
       post "confirm"

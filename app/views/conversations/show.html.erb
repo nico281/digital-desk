@@ -1,0 +1,44 @@
+<% other = @conversation.other_user(current_user) %>
+<% content_for :title, "Chat con #{other.name}" %>
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="card mb-4">
+    <div class="flex items-center justify-between px-6 py-4">
+      <div class="flex items-center gap-3">
+        <%= link_to conversations_path, class: "text-gray-400 hover:text-gray-600 mr-1", data: { turbo_action: "advance" } do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        <% end %>
+        <%= user_avatar(other, size: :md) %>
+        <div>
+          <% if other.professional? && other.professional %>
+            <%= link_to other.name, professional_path(other.professional), class: "font-semibold text-gray-900 hover:text-violet-600 transition-colors", data: { turbo_action: "advance" } %>
+            <p class="text-xs text-gray-500"><%= other.professional.headline %></p>
+          <% else %>
+            <p class="font-semibold text-gray-900"><%= other.name %></p>
+          <% end %>
+        </div>
+      </div>
+
+      <% professional = @conversation.professional %>
+      <% if current_user.id == @conversation.client_id %>
+        <%= link_to professional_path(professional), class: "btn-primary text-sm py-2 px-4", data: { turbo_action: "advance" } do %>
+          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          Reservar
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Chat -->
+  <div class="card" style="height: calc(100vh - 280px); min-height: 400px;">
+    <%= render "shared/chat/chat",
+        conversation: @conversation,
+        mark_read_url: mark_read_conversation_path(@conversation),
+        form_url: conversation_messages_path(@conversation) %>
+  </div>
+</div>

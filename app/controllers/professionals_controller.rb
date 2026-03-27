@@ -5,6 +5,13 @@ class ProfessionalsController < ApplicationController
     @reviews = @professional.reviews.includes(:client).order(created_at: :desc).limit(5)
   end
 
+  def start_conversation
+    return require_authentication! unless user_signed_in?
+    @professional = Professional.find(params[:id])
+    conversation = Conversation.find_or_start(client: current_user, professional: @professional)
+    redirect_to conversation_path(conversation)
+  end
+
   def slots
     @professional = Professional.find(params[:id])
     @service = @professional.services.find(params[:service_id])

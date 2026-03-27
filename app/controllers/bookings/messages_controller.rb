@@ -4,10 +4,13 @@ module Bookings
     before_action :set_booking
 
     def create
-      @message = @booking.messages.build(message_params)
+      @conversation = @booking.conversation
+      @message = @conversation.messages.build(message_params)
       @message.sender = current_user
+      @message.booking = @booking
 
       if @message.save
+        @conversation.touch
         respond_to do |format|
           format.turbo_stream
           format.html { redirect_to booking_path(@booking, anchor: "chat") }
@@ -19,8 +22,8 @@ module Bookings
 
     def mark_read
       ChatReadMarker.upsert(
-        { user_id: current_user.id, booking_id: @booking.id, last_read_at: Time.current, created_at: Time.current, updated_at: Time.current },
-        unique_by: [ :user_id, :booking_id ]
+        { user_id: current_user.id, conversation_id: @booking.conversation_id, last_read_at: Time.current, created_at: Time.current, updated_at: Time.current },
+        unique_by: [ :user_id, :conversation_id ]
       )
       head :no_content
     end

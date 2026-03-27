@@ -8,6 +8,7 @@ class Professional < ApplicationRecord
   has_many :categories, through: :professional_categories
   has_one :cancellation_policy, dependent: :destroy
   has_many :reviews, dependent: :destroy
+  has_many :conversations, dependent: :destroy
   has_one_attached :intro_video
 
   CURRENCIES = {
