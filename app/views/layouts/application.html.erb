@@ -20,7 +20,7 @@
     <meta name="view-transition" content="same-origin" />
   </head>
 
-  <body class="bg-gray-50 text-gray-900 antialiased h-screen flex flex-col overflow-hidden">
+  <body class="bg-gray-50 text-gray-900 antialiased h-screen flex flex-col overflow-hidden <%= content_for?(:body_class) ? yield(:body_class) : '' %>">
     <%= render "components/navbar" %>
 
     <div id="flash">

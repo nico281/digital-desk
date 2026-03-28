@@ -1,9 +1,5 @@
 <%= form_with model: Message.new, url: url, class: "flex items-center gap-2", data: { chat_target: "form", action: "turbo:submit-end->chat#resetForm" } do |f| %>
-  <%= f.text_area :body, rows: 1, placeholder: "Escribí un mensaje...",
-    class: "flex-1 rounded-xl border border-gray-300 px-4 py-2 text-sm resize-none focus:border-gray-500 focus:ring-gray-500 max-h-[120px]",
-    data: { chat_target: "input", action: "keydown->chat#handleKeydown input->chat#autoResize" } %>
-
-  <label class="h-9 w-9 rounded-lg border border-gray-300 hover:bg-gray-50 cursor-pointer transition-colors flex-shrink-0 flex items-center justify-center" title="Adjuntar archivo">
+  <label class="h-9 sm:h-10 w-9 sm:w-10 rounded-xl border border-gray-300 hover:bg-gray-50 active:bg-gray-100 cursor-pointer transition-colors flex-shrink-0 flex items-center justify-center touch-manipulation" title="Adjuntar archivo">
     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
     </svg>
@@ -11,7 +7,13 @@
       class: "hidden", data: { chat_target: "fileInput", action: "change->chat#showFiles" } %>
   </label>
 
-  <button type="submit" class="h-9 w-9 rounded-lg bg-gray-900 text-white hover:bg-gray-800 transition-colors flex-shrink-0 cursor-pointer flex items-center justify-center" data-chat-target="submit">
+  <div class="flex-1 min-w-0 flex">
+    <%= f.text_area :body, rows: 1, placeholder: "Escribí un mensaje...",
+      class: "w-full h-9 sm:h-10 rounded-xl border border-gray-300 px-4 py-2 text-sm resize-none focus:border-gray-500 focus:ring-gray-500 max-h-[120px] leading-normal",
+      data: { chat_target: "input", action: "keydown->chat#handleKeydown input->chat#autoResize" } %>
+  </div>
+
+  <button type="submit" class="h-9 sm:h-10 w-9 sm:w-10 rounded-xl bg-gray-900 text-white hover:bg-gray-800 active:bg-gray-700 transition-colors flex-shrink-0 cursor-pointer flex items-center justify-center touch-manipulation" data-chat-target="submit">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
     </svg>

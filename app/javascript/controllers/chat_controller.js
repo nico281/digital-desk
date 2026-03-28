@@ -8,6 +8,7 @@ export default class extends Controller {
     this.scrollToBottom()
     this.markAsRead()
     this.observeNewMessages()
+    this.setupFocusHandling()
   }
 
   disconnect() {
@@ -27,7 +28,12 @@ export default class extends Controller {
 
   scrollToBottom() {
     if (!this.hasMessagesTarget) return
-    this.messagesTarget.scrollTop = this.messagesTarget.scrollHeight
+    // Smooth scroll para desktop, instant para mobile (mejor performance)
+    const isMobile = window.innerWidth < 640
+    this.messagesTarget.scrollTo({
+      top: this.messagesTarget.scrollHeight,
+      behavior: isMobile ? "auto" : "smooth"
+    })
   }
 
   handleKeydown(e) {
@@ -87,6 +93,15 @@ export default class extends Controller {
         "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')?.content,
         "Accept": "application/json"
       }
+    })
+  }
+
+  setupFocusHandling() {
+    // En mobile, cuando se enfoca el input, hacer scroll al final
+    if (!this.hasInputTarget) return
+
+    this.inputTarget.addEventListener("focus", () => {
+      setTimeout(() => this.scrollToBottom(), 300)
     })
   }
 }

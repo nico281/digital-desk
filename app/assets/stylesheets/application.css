@@ -10,3 +10,10 @@
  */
 
 @import "theme.css";
+
+/* Chat page full height */
+body.conversations-show main,
+body.conversations-show main > div {
+  height: 100%;
+  overflow: hidden;
+}
