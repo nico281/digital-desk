@@ -8,10 +8,9 @@ class ConversationsController < ApplicationController
       .includes(:client, :bookings, :chat_read_markers, professional: :user, messages: :sender)
       .order(updated_at: :desc)
 
-    @last_messages = Message.where(conversation_id: @conversations.map(&:id))
-      .select("DISTINCT ON (conversation_id) id, conversation_id, sender_id, body, created_at")
-      .order("conversation_id, created_at DESC")
-      .index_by(&:conversation_id)
+    @last_messages = @conversations.to_h do |c|
+      [ c.id, c.messages.max_by(&:created_at) ]
+    end
 
     @unread_counts = Conversation.unread_counts_batch(@conversations, current_user)
     @booking_counts = Booking.where(conversation_id: @conversations.map(&:id))

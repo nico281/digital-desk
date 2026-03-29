@@ -69,6 +69,6 @@ class BookingMailer < ApplicationMailer
   private
 
   def reload_booking(booking)
-    Booking.includes(professional: :user, :client, :service, :availability_block).find(booking.id)
+    Booking.includes([ { professional: :user }, :client, :service, :availability_block ]).find(booking.id)
   end
 end
