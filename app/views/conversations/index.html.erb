@@ -7,8 +7,8 @@
     <div class="card divide-y divide-gray-100">
       <% @conversations.each do |conversation| %>
         <% other = conversation.other_user(current_user) %>
-        <% last_msg = conversation.last_message %>
-        <% unread = conversation.unread_messages_count_for(current_user) %>
+        <% last_msg = @last_messages[conversation.id] %>
+        <% unread = @unread_counts[conversation.id] || 0 %>
 
         <%= link_to conversation_path(conversation), class: "flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 hover:bg-gray-50 transition-colors active:bg-gray-100", data: { turbo_action: "advance" } do %>
           <%= user_avatar(other, size: :md) %>
@@ -34,9 +34,9 @@
               </div>
 
               <div class="flex items-center gap-2 flex-shrink-0">
-                <% if conversation.bookings.any? %>
+                <% if (bc = @booking_counts[conversation.id]) && bc > 0 %>
                   <span class="text-[10px] sm:text-xs text-violet-500 bg-violet-50 px-2 py-0.5 rounded-full">
-                    <%= pluralize(conversation.bookings.count, "reserva") %>
+                    <%= pluralize(bc, "reserva") %>
                   </span>
                 <% end %>
 

@@ -43,6 +43,22 @@ class Conversation < ApplicationRecord
     find_or_create_by!(client: client, professional: professional)
   end
 
+  def self.unread_counts_batch(conversations, user)
+    conversation_ids = conversations.map(&:id)
+    return {} if conversation_ids.empty?
+
+    markers = ChatReadMarker.where(user: user, conversation_id: conversation_ids)
+      .pluck(:conversation_id, :last_read_at).to_h
+
+    counts = {}
+    conversations.each do |conv|
+      messages = conv.messages
+      last_read_at = markers[conv.id]
+      counts[conv.id] = last_read_at ? messages.where("created_at > ?", last_read_at).count : messages.count
+    end
+    counts
+  end
+
   private
 
   def client_is_not_professional

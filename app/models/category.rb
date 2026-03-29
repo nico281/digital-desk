@@ -6,8 +6,8 @@ class Category < ApplicationRecord
   has_many :professionals, through: :professional_categories
   has_many :services, dependent: :nullify
 
-  validates :name, presence: true
-  validates :slug, presence: true, uniqueness: true
+  validates :name, presence: true, length: { minimum: 2, maximum: 50 }
+  validates :slug, presence: true, uniqueness: true, length: { maximum: 50 }
 
   scope :root, -> { where(parent_id: nil) }
   scope :ordered, -> { order(name: :asc) }

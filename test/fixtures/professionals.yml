@@ -1,10 +1,35 @@
 pro:
   user: pro_user
-  headline: "Profesor de Yoga"
-  bio: "10 años de experiencia"
+  headline: "Profesor de Yoga con 10 años de experiencia"
+  bio: "Clases de yoga para todos los niveles. Especializado en Hatha y Vinyasa."
   verified: true
+  rating_avg: 4.5
+  rating_count: 12
+  block_duration_minutes: 60
+  buffer_minutes: 0
+  currency: "ARS"
+  setup_completed_at: <%= 1.week.ago.to_fs(:db) %>
+
+another_pro:
+  user: another_pro_user
+  headline: "Terapeuta Holístico"
+  bio: "Terapias alternativas y consultas de bienestar."
+  verified: true
+  rating_avg: 4.8
+  rating_count: 25
+  block_duration_minutes: 30
+  buffer_minutes: 5
+  currency: "ARS"
+  setup_completed_at: <%= 2.weeks.ago.to_fs(:db) %>
+
+unverified_pro:
+  user: unverified_pro_user
+  headline: "Nutricionista"
+  bio: "Planes alimenticios personalizados."
+  verified: false
   rating_avg: 0.0
   rating_count: 0
   block_duration_minutes: 60
   buffer_minutes: 0
-  setup_completed_at: <%= 1.week.ago.to_fs(:db) %>
+  currency: "ARS"
+  setup_completed_at: <%= 3.days.ago.to_fs(:db) %>

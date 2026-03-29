@@ -1,17 +1,29 @@
 client:
   name: "Ana García"
   email: "ana@test.com"
-  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  encrypted_password: <%= Devise::Encryptor.digest(User, "Password123") %>
   role: 0
 
 pro_user:
   name: "Carlos López"
   email: "carlos@test.com"
-  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  encrypted_password: <%= Devise::Encryptor.digest(User, "Password123") %>
   role: 1
 
 other_client:
   name: "María Ruiz"
   email: "maria@test.com"
-  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  encrypted_password: <%= Devise::Encryptor.digest(User, "Password123") %>
   role: 0
+
+another_pro_user:
+  name: "Laura Martínez"
+  email: "laura@test.com"
+  encrypted_password: <%= Devise::Encryptor.digest(User, "Password123") %>
+  role: 1
+
+unverified_pro_user:
+  name: "Pedro Gómez"
+  email: "pedro@test.com"
+  encrypted_password: <%= Devise::Encryptor.digest(User, "Password123") %>
+  role: 1

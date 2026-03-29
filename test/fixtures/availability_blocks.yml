@@ -1,13 +1,53 @@
+# Bloques existentes (mantener compatibilidad)
 completed_block:
   professional: pro
-  date: <%= Date.current - 1.day %>
-  start_time: "09:00:00"
-  end_time: "10:00:00"
+  date: <%= 1.week.ago.to_fs(:db) %>
+  start_time: "09:00"
+  end_time: "10:00"
   status: 1
+  booking: completed_booking
 
 pending_block:
   professional: pro
-  date: <%= Date.current + 1.day %>
-  start_time: "09:00:00"
-  end_time: "10:00:00"
+  date: <%= 1.day.from_now.to_fs(:db) %>
+  start_time: "09:00"
+  end_time: "10:00"
   status: 1
+  booking: pending_booking
+
+# Bloques adicionales para tests
+available_block:
+  professional: pro
+  date: <%= 2.days.from_now.to_fs(:db) %>
+  start_time: "10:00"
+  end_time: "11:00"
+  status: 0
+
+booked_block:
+  professional: pro
+  date: <%= 1.week.from_now.to_fs(:db) %>
+  start_time: "14:00"
+  end_time: "15:00"
+  status: 1
+  booking: confirmed_booking
+
+blocked_block:
+  professional: pro
+  date: <%= Date.tomorrow.to_fs(:db) %>
+  start_time: "16:00"
+  end_time: "17:00"
+  status: 2
+
+past_block:
+  professional: pro
+  date: <%= 1.week.ago.to_fs(:db) %>
+  start_time: "10:00"
+  end_time: "11:00"
+  status: 0
+
+future_block:
+  professional: pro
+  date: <%= 1.month.from_now.to_fs(:db) %>
+  start_time: "10:00"
+  end_time: "11:00"
+  status: 0

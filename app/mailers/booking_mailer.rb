@@ -1,9 +1,9 @@
 class BookingMailer < ApplicationMailer
   def booking_created(booking)
-    @booking = booking
-    @professional = booking.professional
-    @client = booking.client
-    @service = booking.service
+    @booking = reload_booking(booking)
+    @professional = @booking.professional
+    @client = @booking.client
+    @service = @booking.service
 
     mail(
       to: @professional.user.email,
@@ -12,10 +12,10 @@ class BookingMailer < ApplicationMailer
   end
 
   def booking_confirmed(booking)
-    @booking = booking
-    @professional = booking.professional
-    @client = booking.client
-    @service = booking.service
+    @booking = reload_booking(booking)
+    @professional = @booking.professional
+    @client = @booking.client
+    @service = @booking.service
 
     mail(
       to: @client.email,
@@ -24,10 +24,10 @@ class BookingMailer < ApplicationMailer
   end
 
   def booking_cancelled(booking, cancelled_by:)
-    @booking = booking
-    @professional = booking.professional
-    @client = booking.client
-    @service = booking.service
+    @booking = reload_booking(booking)
+    @professional = @booking.professional
+    @client = @booking.client
+    @service = @booking.service
     @cancelled_by = cancelled_by
 
     if cancelled_by == :deadline
@@ -43,10 +43,10 @@ class BookingMailer < ApplicationMailer
   end
 
   def booking_rejected(booking)
-    @booking = booking
-    @professional = booking.professional
-    @client = booking.client
-    @service = booking.service
+    @booking = reload_booking(booking)
+    @professional = @booking.professional
+    @client = @booking.client
+    @service = @booking.service
 
     mail(
       to: @client.email,
@@ -55,14 +55,20 @@ class BookingMailer < ApplicationMailer
   end
 
   def confirmation_deadline_approaching(booking)
-    @booking = booking
-    @professional = booking.professional
-    @service = booking.service
-    @deadline = booking.confirmation_deadline_at
+    @booking = reload_booking(booking)
+    @professional = @booking.professional
+    @service = @booking.service
+    @deadline = @booking.confirmation_deadline_at
 
     mail(
       to: @professional.user.email,
       subject: "Confirmá tu reserva: #{@service.title}"
     )
+  end
+
+  private
+
+  def reload_booking(booking)
+    Booking.includes(professional: :user, :client, :service, :availability_block).find(booking.id)
   end
 end

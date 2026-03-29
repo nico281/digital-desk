@@ -1,0 +1,9 @@
+flexible_policy:
+  professional: pro
+  free_cancel_hours_before: 24
+  late_cancel_refund_percent: 0
+
+strict_policy:
+  professional: another_pro
+  free_cancel_hours_before: 48
+  late_cancel_refund_percent: 50

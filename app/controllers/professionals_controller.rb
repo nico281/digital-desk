@@ -1,7 +1,7 @@
 class ProfessionalsController < ApplicationController
   def show
     @professional = Professional.find(params[:id])
-    @services = @professional.services.active
+    @services = @professional.services.active.includes(:category)
     @reviews = @professional.reviews.includes(:client).order(created_at: :desc).limit(5)
   end
 

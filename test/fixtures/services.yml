@@ -1,7 +1,35 @@
 yoga_class:
   professional: pro
+  category: yoga
   title: "Clase de Yoga"
   description: "Sesión de yoga para principiantes"
   price: 5000
   duration_minutes: 60
+  active: true
+
+yoga_private:
+  professional: pro
+  category: yoga
+  title: "Yoga Privado"
+  description: "Clase individual de yoga"
+  price: 8000
+  duration_minutes: 60
+  active: true
+
+therapy_session:
+  professional: another_pro
+  category: therapy
+  title: "Sesión de Terapia"
+  description: "Consulta de terapia holística"
+  price: 7000
+  duration_minutes: 45
+  active: true
+
+nutrition_consult:
+  professional: unverified_pro
+  category: nutrition
+  title: "Consulta Nutricional"
+  description: "Plan alimenticio personalizado"
+  price: 6000
+  duration_minutes: 30
   active: true

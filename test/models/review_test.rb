@@ -13,45 +13,44 @@ class ReviewTest < ActiveSupport::TestCase
   # --- Validations ---
 
   test "valid review" do
-    assert @review.valid?
+    assert_valid @review
   end
 
   test "rating required" do
     @review.rating = nil
-    assert_not @review.valid?
-    assert @review.errors[:rating].any?
+    assert_invalid @review
   end
 
   test "rating must be 1-5" do
     [ 0, 6, -1, 100 ].each do |bad_rating|
       @review.rating = bad_rating
-      assert_not @review.valid?, "rating #{bad_rating} should be invalid"
+      assert_invalid @review
     end
 
     (1..5).each do |good_rating|
       @review.rating = good_rating
-      assert @review.valid?, "rating #{good_rating} should be valid"
+      assert_valid @review
     end
   end
 
   test "comment max 1000 chars" do
     @review.comment = "x" * 1001
-    assert_not @review.valid?
+    assert_invalid @review
   end
 
   test "comment within limit is valid" do
     @review.comment = "x" * 1000
-    assert @review.valid?
+    assert_valid @review
   end
 
   test "pro_reply max 1000 chars" do
     @review.pro_reply = "x" * 1001
-    assert_not @review.valid?
+    assert_invalid @review
   end
 
   test "pro_reply within limit is valid" do
     @review.pro_reply = "x" * 1000
-    assert @review.valid?
+    assert_valid @review
   end
 
   test "one review per booking" do
@@ -61,8 +60,7 @@ class ReviewTest < ActiveSupport::TestCase
       professional: @pro,
       rating: 3
     )
-    assert_not duplicate.valid?
-    assert duplicate.errors[:booking_id].any?
+    assert_invalid duplicate
   end
 
   test "booking must be completed" do
@@ -72,8 +70,7 @@ class ReviewTest < ActiveSupport::TestCase
       professional: @pro,
       rating: 4
     )
-    assert_not review.valid?
-    assert review.errors[:booking].any?
+    assert_invalid review
   end
 
   test "client must be booking client" do
@@ -83,8 +80,7 @@ class ReviewTest < ActiveSupport::TestCase
       professional: @pro,
       rating: 4
     )
-    assert_not review.valid?
-    assert review.errors[:client].any?
+    assert_invalid review
   end
 
   # --- Scopes ---

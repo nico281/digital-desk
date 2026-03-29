@@ -1,6 +1,26 @@
+# Reviews existentes (mantener compatibilidad)
 good_review:
   booking: completed_booking
   client: client
   professional: pro
   rating: 5
   comment: "Excelente clase, muy recomendable"
+  created_at: <%= 3.weeks.ago.to_fs(:db) %>
+
+# Reviews adicionales para tests
+# NOTA: Cada review debe tener un booking único
+average_review:
+  booking: cancelled_booking
+  client: other_client
+  professional: another_pro
+  rating: 4
+  comment: "Muy buena experiencia"
+  created_at: <%= 2.weeks.ago.to_fs(:db) %>
+
+bad_review:
+  booking: another_booking
+  client: client
+  professional: pro
+  rating: 2
+  comment: "No fue lo que esperaba"
+  created_at: <%= 1.week.ago.to_fs(:db) %>

@@ -3,6 +3,9 @@ module Pro
     before_action :require_setup_complete!
     before_action :set_service, only: [ :edit, :update, :destroy ]
 
+    # Autorización: solo el dueño puede modificar sus servicios
+    include Authorizable
+
     def index
       @services = @professional.services.includes(:category).order(created_at: :desc)
     end

@@ -1,0 +1,19 @@
+yoga:
+  name: "Yoga"
+  slug: "yoga"
+  parent_id:
+
+therapy:
+  name: "Terapia"
+  slug: "terapia"
+  parent_id:
+
+hatha_yoga:
+  name: "Hatha Yoga"
+  slug: "hatha-yoga"
+  parent: yoga
+
+nutrition:
+  name: "Nutrición"
+  slug: "nutricion"
+  parent_id:

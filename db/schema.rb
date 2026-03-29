@@ -51,8 +51,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_27_031107) do
     t.integer "availability_schedule_id"
     t.index ["availability_schedule_id"], name: "index_availability_blocks_on_availability_schedule_id"
     t.index ["booking_id"], name: "index_availability_blocks_on_booking_id"
+    t.index ["date"], name: "index_availability_blocks_on_date"
     t.index ["professional_id", "date", "start_time"], name: "idx_on_professional_id_date_start_time_f5ca85da9c", unique: true
     t.index ["professional_id"], name: "index_availability_blocks_on_professional_id"
+    t.index ["status", "date"], name: "index_availability_blocks_on_status_and_date"
     t.index ["status"], name: "index_availability_blocks_on_status"
   end
 
@@ -81,10 +83,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_27_031107) do
     t.datetime "confirmation_deadline_at"
     t.integer "conversation_id"
     t.index ["availability_block_id"], name: "index_bookings_on_availability_block_id"
+    t.index ["client_id", "status"], name: "index_bookings_on_client_id_and_status"
     t.index ["client_id"], name: "index_bookings_on_client_id"
     t.index ["confirmation_deadline_at"], name: "index_bookings_on_confirmation_deadline_at"
     t.index ["conversation_id"], name: "index_bookings_on_conversation_id"
+    t.index ["created_at"], name: "index_bookings_on_created_at"
     t.index ["payment_id"], name: "index_bookings_on_payment_id"
+    t.index ["professional_id", "status"], name: "index_bookings_on_professional_id_and_status"
     t.index ["professional_id"], name: "index_bookings_on_professional_id"
     t.index ["service_id"], name: "index_bookings_on_service_id"
     t.index ["status"], name: "index_bookings_on_status"
@@ -130,6 +135,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_27_031107) do
     t.index ["client_id", "professional_id"], name: "index_conversations_on_client_id_and_professional_id", unique: true
     t.index ["client_id"], name: "index_conversations_on_client_id"
     t.index ["professional_id"], name: "index_conversations_on_professional_id"
+    t.index ["updated_at"], name: "index_conversations_on_updated_at"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -142,6 +148,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_27_031107) do
     t.index ["booking_id"], name: "index_messages_on_booking_id"
     t.index ["conversation_id", "created_at"], name: "index_messages_on_conversation_id_and_created_at"
     t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["created_at"], name: "index_messages_on_created_at"
     t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
@@ -181,7 +188,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_27_031107) do
     t.integer "buffer_minutes", default: 0, null: false
     t.string "currency", default: "UYU", null: false
     t.datetime "setup_completed_at"
+    t.index ["created_at"], name: "index_professionals_on_created_at"
+    t.index ["rating_avg"], name: "index_professionals_on_rating_avg"
     t.index ["user_id"], name: "index_professionals_on_user_id", unique: true
+    t.index ["verified"], name: "index_professionals_on_verified"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -196,7 +206,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_27_031107) do
     t.datetime "pro_replied_at"
     t.index ["booking_id"], name: "index_reviews_on_booking_id"
     t.index ["client_id"], name: "index_reviews_on_client_id"
+    t.index ["created_at"], name: "index_reviews_on_created_at"
     t.index ["professional_id"], name: "index_reviews_on_professional_id"
+    t.index ["rating"], name: "index_reviews_on_rating"
   end
 
   create_table "services", force: :cascade do |t|
@@ -209,7 +221,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_27_031107) do
     t.boolean "active", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_services_on_active"
     t.index ["category_id"], name: "index_services_on_category_id"
+    t.index ["duration_minutes"], name: "index_services_on_duration_minutes"
+    t.index ["price"], name: "index_services_on_price"
     t.index ["professional_id"], name: "index_services_on_professional_id"
   end
 

@@ -1,0 +1,17 @@
+hello_message:
+  conversation: pro_conversation
+  sender: client
+  body: "Hola, quisiera agendar una clase"
+  created_at: <%= 1.week.ago.to_fs(:db) %>
+
+reply_message:
+  conversation: pro_conversation
+  sender: pro_user
+  body: "¡Hola! Claro, ¿qué día te quedaría bien?"
+  created_at: <%= 6.days.ago.to_fs(:db) %>
+
+recent_message:
+  conversation: pro_conversation
+  sender: client
+  body: "¿Tienes disponibilidad el martes?"
+  created_at: <%= 1.day.ago.to_fs(:db) %>

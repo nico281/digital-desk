@@ -1,0 +1,11 @@
+weekday_schedule:
+  professional: pro
+  day_of_week: 1
+  start_time: "09:00"
+  end_time: "18:00"
+
+weekend_schedule:
+  professional: another_pro
+  day_of_week: 6
+  start_time: "10:00"
+  end_time: "14:00"

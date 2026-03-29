@@ -11,7 +11,7 @@ class DashboardsController < ApplicationController
       .joins(:availability_block)
       .where("availability_blocks.date >= ?", Date.current)
       .order("availability_blocks.date ASC, availability_blocks.start_time ASC")
-      .includes({ professional: :user }, :service, :availability_block)
+      .includes({ professional: :user }, :service, :availability_block, conversation: [ :chat_read_markers, :messages ])
 
     @next_booking = @upcoming_bookings.where(status: :confirmed).first
 

@@ -36,11 +36,21 @@ class BookingsController < ApplicationController
   end
 
   def confirm
+    unless is_booking_professional?(@booking)
+      redirect_to @booking, alert: "Solo el profesional puede confirmar"
+      return
+    end
+
     @booking.confirm!
     redirect_to @booking, notice: "Reserva confirmada"
   end
 
   def cancel
+    unless can_modify_booking?(@booking)
+      redirect_to @booking, alert: "No podés cancelar esta reserva"
+      return
+    end
+
     unless @booking.pending? || @booking.confirmed?
       redirect_to @booking, alert: "No se puede cancelar esta reserva"
       return
@@ -57,7 +67,7 @@ class BookingsController < ApplicationController
       return
     end
 
-    unless current_user == @booking.client || current_user == @booking.professional.user
+    unless can_modify_booking?(@booking)
       redirect_to @booking, alert: "No tenés acceso a esta videollamada"
       return
     end
@@ -82,12 +92,12 @@ class BookingsController < ApplicationController
       return
     end
 
-    unless current_user == @booking.client || current_user == @booking.professional.user
+    unless can_modify_booking?(@booking)
       render json: { error: "Unauthorized" }, status: :unauthorized
       return
     end
 
-    identity = current_user == @booking.client ? "client_#{@booking.client.id}" : "pro_#{@booking.professional.id}"
+    identity = is_booking_client?(@booking) ? "client_#{@booking.client.id}" : "pro_#{@booking.professional.id}"
     name = current_user.name
 
     token = LivekitTokenGenerator.generate(
@@ -102,7 +112,11 @@ class BookingsController < ApplicationController
   private
 
   def set_booking
-    @booking = Booking.find(params[:id])
+    @booking = Booking.includes(
+      :service, :availability_block, :payment,
+      { professional: :user }, :client,
+      conversation: [ :chat_read_markers, :messages ]
+    ).find(params[:id])
   end
 
   def booking_params

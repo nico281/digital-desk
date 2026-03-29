@@ -1,9 +1,11 @@
+# Bookings existentes (mantener compatibilidad)
 completed_booking:
   client: client
   professional: pro
   service: yoga_class
   availability_block: completed_block
   status: 2
+  created_at: <%= 1.month.ago.to_fs(:db) %>
 
 pending_booking:
   client: client
@@ -11,3 +13,29 @@ pending_booking:
   service: yoga_class
   availability_block: pending_block
   status: 0
+  created_at: <%= 2.days.ago.to_fs(:db) %>
+
+# Bookings adicionales para tests
+confirmed_booking:
+  client: other_client
+  professional: pro
+  service: yoga_class
+  availability_block: booked_block
+  status: 1
+  created_at: <%= 1.week.ago.to_fs(:db) %>
+
+cancelled_booking:
+  client: other_client
+  professional: another_pro
+  service: therapy_session
+  availability_block: blocked_block
+  status: 3
+  created_at: <%= 2.weeks.ago.to_fs(:db) %>
+
+another_booking:
+  client: client
+  professional: pro
+  service: yoga_private
+  availability_block: future_block
+  status: 0
+  created_at: <%= 1.day.ago.to_fs(:db) %>

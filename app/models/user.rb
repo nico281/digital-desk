@@ -12,9 +12,14 @@ class User < ApplicationRecord
 
   enum :role, client: 0, professional: 1
 
-  validates :name, presence: true
-  validates :email, presence: true, uniqueness: true
-  validates :password, presence: true, on: :create, unless: :from_omniauth?
+  # Validaciones mejoradas
+  validates :name, presence: true, length: { minimum: 2, maximum: 100 }
+  validates :email, presence: true, uniqueness: { case_sensitive: false },
+            format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :password, presence: true, on: :create, unless: :from_omniauth?,
+            length: { minimum: 8 },
+            format: { with: /\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, message: "debe incluir mayúscula, minúscula y número" }, allow_blank: true
+  validate :avatar_validation
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
@@ -30,5 +35,17 @@ class User < ApplicationRecord
 
   def can_provide_services?
     professional?
+  end
+
+  private
+
+  def avatar_validation
+    return unless avatar.attached?
+
+    if avatar.byte_size > 5.megabytes
+      errors.add(:avatar, "excede 5MB")
+    elsif !avatar.content_type.in?(%w[image/jpeg image/png image/webp])
+      errors.add(:avatar, "debe ser JPEG, PNG o WebP")
+    end
   end
 end
