@@ -5,7 +5,7 @@ module Authorizable
 
   # before_action para acciones que modifican recursos
   included do
-    before_action :verify_ownership!, only: [:edit, :update, :destroy]
+    before_action :verify_ownership!, only: [ :edit, :update, :destroy ]
   end
 
   private

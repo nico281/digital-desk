@@ -15,13 +15,13 @@ class AddPerformanceIndexes < ActiveRecord::Migration[8.0]
     # Bookings
     add_index :bookings, :status unless index_exists?(:bookings, :status)
     add_index :bookings, :created_at unless index_exists?(:bookings, :created_at)
-    add_index :bookings, [:client_id, :status] unless index_exists?(:bookings, [:client_id, :status])
-    add_index :bookings, [:professional_id, :status] unless index_exists?(:bookings, [:professional_id, :status])
+    add_index :bookings, [ :client_id, :status ] unless index_exists?(:bookings, [ :client_id, :status ])
+    add_index :bookings, [ :professional_id, :status ] unless index_exists?(:bookings, [ :professional_id, :status ])
 
     # Availability blocks
     add_index :availability_blocks, :status unless index_exists?(:availability_blocks, :status)
     add_index :availability_blocks, :date unless index_exists?(:availability_blocks, :date)
-    add_index :availability_blocks, [:status, :date] unless index_exists?(:availability_blocks, [:status, :date])
+    add_index :availability_blocks, [ :status, :date ] unless index_exists?(:availability_blocks, [ :status, :date ])
 
     # Messages
     add_index :messages, :conversation_id unless index_exists?(:messages, :conversation_id)

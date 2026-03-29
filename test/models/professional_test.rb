@@ -119,4 +119,3 @@ class ProfessionalTest < ActiveSupport::TestCase
     refute unverified.setup_complete?
   end
 end
-

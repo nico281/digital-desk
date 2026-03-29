@@ -18,7 +18,7 @@ class User < ApplicationRecord
             format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, presence: true, on: :create, unless: :from_omniauth?,
             length: { minimum: 8 },
-            format: { with: /\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, message: "debe incluir mayúscula, minúscula y número" }, allow_blank: true
+            format: { with: /\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*\z/, message: "debe incluir mayúscula, minúscula y número" }, allow_blank: true
   validate :avatar_validation
 
   def self.from_omniauth(auth)

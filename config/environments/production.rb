@@ -77,7 +77,7 @@ Rails.application.configure do
   # Content Security Policy
   config.content_security_policy_enabled = true
   config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }
-  config.content_security_policy_nonce_directives = %w(script-src style-src)
+  config.content_security_policy_nonce_directives = %w[script-src style-src]
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false

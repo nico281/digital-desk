@@ -8,9 +8,9 @@ module Pro
       if @wizard
         @step = if params[:step].present?
                   params[:step].to_i.clamp(1, 3)
-                else
+        else
                   current_user.professional&.next_setup_step || 1
-                end
+        end
       else
         @step = params[:step]&.to_i&.clamp(1, 3) || 1
       end

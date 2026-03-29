@@ -13,7 +13,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "requiere nombre" do
     @user.name = nil
-    assert_invalid @user, ["Name no puede estar en blanco"]
+    assert_invalid @user, [ "Name no puede estar en blanco" ]
   end
 
   test "requiere email" do

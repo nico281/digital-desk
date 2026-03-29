@@ -71,6 +71,6 @@ class MessageTest < ActiveSupport::TestCase
     msg3 = messages(:recent_message)
 
     ordered = @message.conversation.messages.ordered
-    assert_equal [msg1, msg2, msg3], ordered.to_a
+    assert_equal [ msg1, msg2, msg3 ], ordered.to_a
   end
 end
